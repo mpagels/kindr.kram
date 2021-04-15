@@ -10,5 +10,6 @@ body {
     margin: 0;
     background-color: #ffffff;
     color: #000000;
+    font-family: "Open Sans";
 }
 `
