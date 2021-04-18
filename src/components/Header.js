@@ -15,9 +15,12 @@ export default function Header({ openModal, budget, openTransaktionsModal }) {
 }
 
 const HeaderWrapper = styled.header`
-  position: sticky;
+  z-index: 1;
+  position: fixed;
   height: 70px;
   top: 0;
+  left: 0;
+  right: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;

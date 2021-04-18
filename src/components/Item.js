@@ -1,35 +1,50 @@
-import kinderwagen from '../assets/jpg/1.JPG'
 import ProgressBar from 'react-percent-bar'
 import styled from 'styled-components'
 import { useState } from 'react'
 
-export default function Item({ data }) {
+export default function Item({ data, index, user, saveNewItem }) {
   const [spendIsOpen, setSpendIsOpen] = useState(false)
   const [input, setInput] = useState('')
   const [isError, setIsError] = useState(false)
-  const donationVolumne = 0
-  const { description, donations, image_urls, name, price } = data || {}
-
-  function isDonationFull() {
-    return donationVolumne + input > price
+  const [errorMessage, setErrorMessage] = useState()
+  const { description, donations, image_urls, name, price, _id } = data || {}
+  const donationVolumne = donations.reduce((pre, cur) => pre + cur.amount, 0)
+  function handleDonationClick() {
+    const donation = {
+      userName: user,
+      amount: Number(input),
+      category: 'donation',
+      item_id: _id,
+    }
+    fetch('http://localhost:4006/transaction/donate', {
+      method: 'POST',
+      body: JSON.stringify(donation),
+      headers: {
+        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status === 'error') {
+          setErrorMessage(data.message)
+          setIsError(true)
+        } else {
+          saveNewItem(index, data)
+          setErrorMessage()
+          setIsError(false)
+          setSpendIsOpen(false)
+        }
+      })
   }
 
-  /*  function handleSpending() {
-    let toSpend
-    if (isDonationFull()) {
-      toSpend = price - donationVolumne
-    } else toSpend = input
-
-    if (isEnoughBudget(toSpend)) {
-      setIsError(false)
-      reduceBudget(toSpend)
-      setSpendIsOpen(false)
-    } else setIsError(true)
-  } */
+  function handleAbortSpendClick() {
+    setInput(0)
+    setSpendIsOpen(false)
+  }
 
   return (
     <ItemWrapper>
-      <header>{name}</header>
       <Image src={image_urls[0]} alt={name} />
       <PriceWrapper>
         <CurrentDonation isFull={donationVolumne === price}>
@@ -39,7 +54,7 @@ export default function Item({ data }) {
         </CurrentDonation>
         <PriceTag>{`Preis: ${price}€`}</PriceTag>
       </PriceWrapper>
-      <h2>Beschreibung</h2>
+      <h2>{name}</h2>
       <Description>{description}</Description>
       <ProgressBar
         colorShift={true}
@@ -56,11 +71,11 @@ export default function Item({ data }) {
               value={input}
               onChange={(e) => setInput(Number(e.target.value))}
             />
-            <SpendButton>Spenden</SpendButton>
+            <SpendButton onClick={handleDonationClick}>Spenden</SpendButton>
           </SpendWrapper>
           {isError && (
             <ErrorMessage>
-              Budget reicht nicht aus, um den Betrag zu spenden{' '}
+              {errorMessage}
               <RemoveErrorButton onClick={() => setIsError(false)}>
                 ❌
               </RemoveErrorButton>
@@ -69,9 +84,7 @@ export default function Item({ data }) {
         </div>
       )}
       {spendIsOpen ? (
-        <Abortbutton onClick={() => setSpendIsOpen(false)}>
-          Abbrechen
-        </Abortbutton>
+        <Abortbutton onClick={handleAbortSpendClick}>Abbrechen</Abortbutton>
       ) : (
         <WantSpendButton
           disabled={donationVolumne === price}
@@ -96,6 +109,7 @@ const PriceWrapper = styled.div`
 const ErrorMessage = styled.p`
   color: red;
   font-size: 0.7em;
+  text-align: center;
 `
 const SpendWrapper = styled.div`
   margin: 15px;

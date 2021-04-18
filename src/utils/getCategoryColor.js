@@ -5,6 +5,6 @@ export default function getCategoryColor(category) {
     case 'withdraw':
       return '#e76f51'
     case 'donation':
-      return '#e9c46a'
+      return '#003049'
   }
 }

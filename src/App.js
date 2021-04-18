@@ -8,14 +8,14 @@ Modal.setAppElement('#root')
 
 function App() {
   var subtitle
-
+  const user = 'Anke'
   const [modalIsOpen, setIsOpen] = useState(false)
   const [transaktionsModalIsOpen, setTransaktionsModalIsOpen] = useState(false)
   const inputRef = useRef()
   const [budget, setBudet] = useState(0)
   const [transactions, setTransactions] = useState()
   const [items, setItems] = useState()
-  const [user, setUser] = useState('Anke')
+
   const [error, setError] = useState('')
 
   if (modalIsOpen || transaktionsModalIsOpen) {
@@ -30,19 +30,20 @@ function App() {
     fetch('http://localhost:4006/item')
       .then((res) => res.json())
       .then((data) => setItems(data))
+  }, [])
 
+  useEffect(() => {
     fetch(`http://localhost:4006/user/${user}`)
       .then((res) => res.json())
       .then((data) => {
         setBudet(data.from_location.budget)
       })
-  }, [])
-
+  }, [items])
   useEffect(() => {
     fetch('http://localhost:4006/transaction/Toerpt')
       .then((res) => res.json())
       .then((data) => setTransactions(data[0].transactions))
-  }, [budget])
+  }, [budget, items])
 
   function openModal() {
     setError(false)
@@ -64,6 +65,14 @@ function App() {
     setTransaktionsModalIsOpen(false)
   }
 
+  function saveNewItem(index, newItem) {
+    const newItems = [
+      ...items.slice(0, index),
+      newItem,
+      ...items.slice(index + 1),
+    ]
+    setItems(newItems)
+  }
   function convertTime(time) {
     const options = {
       weekday: 'long',
@@ -162,21 +171,34 @@ function App() {
         <ModelSection>
           <TransactionList>
             {transactions &&
-              transactions.map((transaction) => (
-                <TransaktionItem>
-                  {`${transaction.from.name} hat am ${convertTime(
-                    transaction.performed_at
-                  )}`}
-                  <Amount category={transaction.category}>
-                    {` ${transaction.amount}€ `}
-                  </Amount>
-                  {`${
-                    transaction.category === 'deposit'
-                      ? 'eingezahlt'
-                      : 'abgehoben'
-                  }.`}
-                </TransaktionItem>
-              ))}
+              transactions.map((transaction) =>
+                transaction.category === 'donation' ? (
+                  <TransaktionItem key={transaction._id}>
+                    {`${transaction.from.name} hat am ${convertTime(
+                      transaction.performed_at
+                    )}`}
+                    <Amount category={transaction.category}>
+                      {` ${transaction.amount}€ `}
+                    </Amount>
+                    für <strong>{transaction.for_item.name} </strong>
+                    gespendet.
+                  </TransaktionItem>
+                ) : (
+                  <TransaktionItem key={transaction._id}>
+                    {`${transaction.from.name} hat am ${convertTime(
+                      transaction.performed_at
+                    )}`}
+                    <Amount category={transaction.category}>
+                      {` ${transaction.amount}€ `}
+                    </Amount>
+                    {`${
+                      transaction.category === 'deposit'
+                        ? 'eingezahlt'
+                        : 'abgehoben'
+                    }.`}
+                  </TransaktionItem>
+                )
+              )}
           </TransactionList>
         </ModelSection>
 
@@ -189,9 +211,16 @@ function App() {
         budget={budget}
       />
       <Main>
-        {items && items.map((item) => <Item key={item.id} data={item} />)}
-        {/* <Item isEnoughBudget={isEnoughBudget} reduceBudget={reduceBudget} />
-        <Item isEnoughBudget={isEnoughBudget} reduceBudget={reduceBudget} /> */}
+        {items &&
+          items.map((item, index) => (
+            <Item
+              key={item.id}
+              data={item}
+              index={index}
+              user={user}
+              saveNewItem={saveNewItem}
+            />
+          ))}
       </Main>
     </Wrapper>
   )
@@ -205,7 +234,7 @@ const ModelSection = styled.section`
 `
 
 const Wrapper = styled.div`
-  padding-top: 200px;
+  padding-top: 80px;
 `
 const CloseButton = styled.button`
   all: unset;
