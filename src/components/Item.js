@@ -3,18 +3,18 @@ import ProgressBar from 'react-percent-bar'
 import styled from 'styled-components'
 import { useState } from 'react'
 
-export default function Item({ isEnoughBudget, reduceBudget }) {
-  const [price, setPrice] = useState(150)
+export default function Item({ data }) {
   const [spendIsOpen, setSpendIsOpen] = useState(false)
-  const [donationVolumne, setDonationVolume] = useState(0)
   const [input, setInput] = useState('')
   const [isError, setIsError] = useState(false)
+  const donationVolumne = 0
+  const { description, donations, image_urls, name, price } = data || {}
 
   function isDonationFull() {
     return donationVolumne + input > price
   }
 
-  function handleSpending() {
+  /*  function handleSpending() {
     let toSpend
     if (isDonationFull()) {
       toSpend = price - donationVolumne
@@ -22,16 +22,15 @@ export default function Item({ isEnoughBudget, reduceBudget }) {
 
     if (isEnoughBudget(toSpend)) {
       setIsError(false)
-      setDonationVolume(toSpend + donationVolumne)
       reduceBudget(toSpend)
       setSpendIsOpen(false)
     } else setIsError(true)
-  }
+  } */
 
   return (
     <ItemWrapper>
-      <header>Kinderwagen</header>
-      <Image src={kinderwagen} alt="kinderwagen" />
+      <header>{name}</header>
+      <Image src={image_urls[0]} alt={name} />
       <PriceWrapper>
         <CurrentDonation isFull={donationVolumne === price}>
           {donationVolumne === price
@@ -41,15 +40,7 @@ export default function Item({ isEnoughBudget, reduceBudget }) {
         <PriceTag>{`Preis: ${price}€`}</PriceTag>
       </PriceWrapper>
       <h2>Beschreibung</h2>
-      <Description>
-        I'm baby pitchfork typewriter ennui thundercats, 3 wolf moon mumblecore
-        chillwave man bun normcore knausgaard salvia. Humblebrag tote bag vape
-        fingerstache jean shorts kombucha YOLO heirloom organic blog. Af chia
-        banh mi tilde pop-up tousled austin etsy single-origin coffee quinoa
-        PBR&B freegan skateboard franzen tumeric. Cardigan artisan beard put a
-        bird on it marfa. Vape chicharrones craft beer pop-up single-origin
-        coffee humblebrag.
-      </Description>
+      <Description>{description}</Description>
       <ProgressBar
         colorShift={true}
         fillColor="orange"
@@ -65,7 +56,7 @@ export default function Item({ isEnoughBudget, reduceBudget }) {
               value={input}
               onChange={(e) => setInput(Number(e.target.value))}
             />
-            <SpendButton onClick={handleSpending}>Spenden</SpendButton>
+            <SpendButton>Spenden</SpendButton>
           </SpendWrapper>
           {isError && (
             <ErrorMessage>

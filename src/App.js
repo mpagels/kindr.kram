@@ -2,23 +2,54 @@ import styled from 'styled-components'
 import Header from './components/Header'
 import Modal from 'react-modal'
 import Item from './components/Item'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import getCategoryColor from './utils/getCategoryColor'
 Modal.setAppElement('#root')
 
 function App() {
   var subtitle
+
   const [modalIsOpen, setIsOpen] = useState(false)
+  const [transaktionsModalIsOpen, setTransaktionsModalIsOpen] = useState(false)
+  const inputRef = useRef()
   const [budget, setBudet] = useState(0)
+  const [transactions, setTransactions] = useState()
+  const [items, setItems] = useState()
+  const [user, setUser] = useState('Anke')
+  const [error, setError] = useState('')
 
-  function isEnoughBudget(budgetToSpend) {
-    return budget - budgetToSpend >= 0
+  if (modalIsOpen || transaktionsModalIsOpen) {
+    document.body.style.overflow = 'hidden'
   }
 
-  function reduceBudget(amount) {
-    setBudet(budget - amount)
+  if (!modalIsOpen && !transaktionsModalIsOpen) {
+    document.body.style.overflow = 'unset'
   }
+
+  useEffect(() => {
+    fetch('http://localhost:4006/item')
+      .then((res) => res.json())
+      .then((data) => setItems(data))
+
+    fetch(`http://localhost:4006/user/${user}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setBudet(data.from_location.budget)
+      })
+  }, [])
+
+  useEffect(() => {
+    fetch('http://localhost:4006/transaction/Toerpt')
+      .then((res) => res.json())
+      .then((data) => setTransactions(data[0].transactions))
+  }, [budget])
+
   function openModal() {
+    setError(false)
     setIsOpen(true)
+  }
+  function openTransaktionsModal() {
+    setTransaktionsModalIsOpen(true)
   }
 
   function afterOpenModal() {
@@ -29,10 +60,67 @@ function App() {
   function closeModal() {
     setIsOpen(false)
   }
+  function closeTransactionsModal() {
+    setTransaktionsModalIsOpen(false)
+  }
 
-  function handleAddBudget(event) {
-    event.preventDefault()
-    setBudet(budget + Number(event.target.budget.value))
+  function convertTime(time) {
+    const options = {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }
+    return new Date(Date.parse(time)).toLocaleDateString('de-DE', options)
+  }
+  function makeDeposit() {
+    const deposit = {
+      userName: user,
+      amount: Number(inputRef.current.value),
+      category: 'deposit',
+    }
+
+    fetch('http://localhost:4006/transaction/deposit', {
+      method: 'POST',
+      body: JSON.stringify(deposit),
+      headers: {
+        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setBudet(data.from.from_location.budget)
+        inputRef.current.value = ''
+        setIsOpen(false)
+      })
+  }
+
+  function makeWithDraw() {
+    const deposit = {
+      userName: user,
+      amount: Number(inputRef.current.value),
+      category: 'withdraw',
+    }
+    fetch('http://localhost:4006/transaction/withdraw', {
+      method: 'POST',
+      body: JSON.stringify(deposit),
+      headers: {
+        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status === 'error') {
+          setError(data.message)
+        } else {
+          setBudet(data.from.from_location.budget)
+          inputRef.current.value = ''
+          setIsOpen(false)
+          setError(false)
+        }
+      })
   }
 
   return (
@@ -44,18 +132,66 @@ function App() {
         style={customStyles}
         contentLabel="Example Modal"
       >
-        <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Hello</h2>
+        <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Konto</h2>
         <div>I am a modal</div>
-        <form onSubmit={handleAddBudget}>
-          <input name="budget" type="number" required />
-          <button>Budget aufladen</button>
-        </form>
-        <button onClick={closeModal}>close</button>
+        <KontoInput></KontoInput>
+        <TransactionInput
+          name="budget"
+          ref={inputRef}
+          type="number"
+          required
+          min={1}
+        />
+        {error && <TransactionError>{error}</TransactionError>}
+        <KontoButtonWrapper>
+          <DepositButton onClick={makeDeposit}>Einzahlen</DepositButton>
+          <WithDrawButton onClick={makeWithDraw}>Auszahlen</WithDrawButton>
+        </KontoButtonWrapper>
+
+        <CloseButton onClick={closeModal}>❌</CloseButton>
       </Modal>
-      <Header openModal={openModal} budget={budget} />
+      <Modal
+        isOpen={transaktionsModalIsOpen}
+        onAfterOpen={afterOpenModal}
+        onRequestClose={closeModal}
+        style={customStyles}
+        contentLabel="Transactions Modal"
+      >
+        <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Transaktionen</h2>
+
+        <ModelSection>
+          <TransactionList>
+            {transactions &&
+              transactions.map((transaction) => (
+                <TransaktionItem>
+                  {`${transaction.from.name} hat am ${convertTime(
+                    transaction.performed_at
+                  )}`}
+                  <Amount category={transaction.category}>
+                    {` ${transaction.amount}€ `}
+                  </Amount>
+                  {`${
+                    transaction.category === 'deposit'
+                      ? 'eingezahlt'
+                      : 'abgehoben'
+                  }.`}
+                </TransaktionItem>
+              ))}
+          </TransactionList>
+        </ModelSection>
+
+        <CloseButton onClick={closeTransactionsModal}>❌</CloseButton>
+      </Modal>
+
+      <Header
+        openModal={openModal}
+        openTransaktionsModal={openTransaktionsModal}
+        budget={budget}
+      />
       <Main>
-        <Item isEnoughBudget={isEnoughBudget} reduceBudget={reduceBudget} />
-        <Item isEnoughBudget={isEnoughBudget} reduceBudget={reduceBudget} />
+        {items && items.map((item) => <Item key={item.id} data={item} />)}
+        {/* <Item isEnoughBudget={isEnoughBudget} reduceBudget={reduceBudget} />
+        <Item isEnoughBudget={isEnoughBudget} reduceBudget={reduceBudget} /> */}
       </Main>
     </Wrapper>
   )
@@ -63,13 +199,63 @@ function App() {
 
 export default App
 
+const ModelSection = styled.section`
+  height: 300px;
+  overflow-y: auto;
+`
+
 const Wrapper = styled.div`
-  display: grid;
-  grid-template-rows: 70px auto;
+  padding-top: 200px;
+`
+const CloseButton = styled.button`
+  all: unset;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
 `
 
 const Main = styled.main``
 
+const TransactionInput = styled.input`
+  display: block;
+`
+
+const DepositButton = styled.button`
+  all: unset;
+  cursor: pointer;
+  border-radius: 10px;
+  padding: 10px;
+  background-color: #2a9d8f;
+`
+const WithDrawButton = styled(DepositButton)`
+  background-color: #e76f51;
+`
+const TransactionError = styled.span`
+  color: red;
+  font-size: 0.5em;
+`
+const TransactionList = styled.ul`
+  list-style-type: none;
+  padding: 0;
+`
+const TransaktionItem = styled.li`
+  font-size: 0.8em;
+`
+const Amount = styled.span`
+  font-weight: bold;
+  color: ${(props) => getCategoryColor(props.category)};
+`
+
+const KontoInput = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`
+const KontoButtonWrapper = styled.div`
+  display: flex;
+  gap: 10px;
+`
 const customStyles = {
   content: {
     top: '50%',
