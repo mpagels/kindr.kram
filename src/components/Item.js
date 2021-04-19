@@ -1,6 +1,8 @@
 import ProgressBar from 'react-percent-bar'
 import styled from 'styled-components'
 import { useState } from 'react'
+import 'react-responsive-carousel/lib/styles/carousel.min.css' // requires a loader
+import { Carousel } from 'react-responsive-carousel'
 
 export default function Item({ data, index, user, saveNewItem }) {
   const [spendIsOpen, setSpendIsOpen] = useState(false)
@@ -45,7 +47,11 @@ export default function Item({ data, index, user, saveNewItem }) {
 
   return (
     <ItemWrapper>
-      <Image src={image_urls[0]} alt={name} />
+      <Carousel>
+        {image_urls.map((url, index) => (
+          <Image src={url} key={name} alt={name} />
+        ))}
+      </Carousel>
       <PriceWrapper>
         <CurrentDonation isFull={donationVolumne === price}>
           {donationVolumne === price
