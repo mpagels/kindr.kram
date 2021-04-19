@@ -212,7 +212,7 @@ function App() {
         budget={budget}
       />
       <Router>
-        <Route path="/">
+        <Route exact path="/">
           <Main>
             {items &&
               items.map((item, index) => (
@@ -226,13 +226,13 @@ function App() {
               ))}
           </Main>
         </Route>
+        <Route path="/admin">
+          {items &&
+            items.map((item, index) => (
+              <ItemForAdmin key={item.id} data={item} />
+            ))}
+        </Route>
       </Router>
-      <Route path="/admin">
-        {items &&
-          items.map((item, index) => (
-            <ItemForAdmin key={item.id} data={item} />
-          ))}
-      </Route>
     </Wrapper>
   )
 }
