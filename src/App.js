@@ -4,6 +4,7 @@ import Modal from 'react-modal'
 import Item from './components/Item'
 import { useEffect, useRef, useState } from 'react'
 import getCategoryColor from './utils/getCategoryColor'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 Modal.setAppElement('#root')
 
 function App() {
@@ -210,18 +211,22 @@ function App() {
         openTransaktionsModal={openTransaktionsModal}
         budget={budget}
       />
-      <Main>
-        {items &&
-          items.map((item, index) => (
-            <Item
-              key={item.id}
-              data={item}
-              index={index}
-              user={user}
-              saveNewItem={saveNewItem}
-            />
-          ))}
-      </Main>
+      <Router>
+        <Route path="/">
+          <Main>
+            {items &&
+              items.map((item, index) => (
+                <Item
+                  key={item.id}
+                  data={item}
+                  index={index}
+                  user={user}
+                  saveNewItem={saveNewItem}
+                />
+              ))}
+          </Main>
+        </Route>
+      </Router>
     </Wrapper>
   )
 }
