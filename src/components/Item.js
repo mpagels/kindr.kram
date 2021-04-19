@@ -16,7 +16,7 @@ export default function Item({ data, index, user, saveNewItem }) {
       category: 'donation',
       item_id: _id,
     }
-    fetch('http://localhost:4006/transaction/donate', {
+    fetch('/transaction/donate', {
       method: 'POST',
       body: JSON.stringify(donation),
       headers: {

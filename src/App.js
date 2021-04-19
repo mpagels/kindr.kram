@@ -27,20 +27,20 @@ function App() {
   }
 
   useEffect(() => {
-    fetch('http://localhost:4006/item')
+    fetch('/item')
       .then((res) => res.json())
       .then((data) => setItems(data))
   }, [])
 
   useEffect(() => {
-    fetch(`http://localhost:4006/user/${user}`)
+    fetch(`/user/${user}`)
       .then((res) => res.json())
       .then((data) => {
         setBudet(data.from_location.budget)
       })
   }, [items])
   useEffect(() => {
-    fetch('http://localhost:4006/transaction/Toerpt')
+    fetch('/transaction/Toerpt')
       .then((res) => res.json())
       .then((data) => setTransactions(data[0].transactions))
   }, [budget, items])
@@ -89,7 +89,7 @@ function App() {
       category: 'deposit',
     }
 
-    fetch('http://localhost:4006/transaction/deposit', {
+    fetch('/transaction/deposit', {
       method: 'POST',
       body: JSON.stringify(deposit),
       headers: {
@@ -111,7 +111,7 @@ function App() {
       amount: Number(inputRef.current.value),
       category: 'withdraw',
     }
-    fetch('http://localhost:4006/transaction/withdraw', {
+    fetch('/transaction/withdraw', {
       method: 'POST',
       body: JSON.stringify(deposit),
       headers: {
