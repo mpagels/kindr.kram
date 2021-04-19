@@ -15,7 +15,7 @@ export default function Header({ openModal, budget, openTransaktionsModal }) {
 }
 
 const HeaderWrapper = styled.header`
-  z-index: 1;
+  z-index: 2;
   position: fixed;
   height: 70px;
   top: 0;
