@@ -5,6 +5,7 @@ import Item from './components/Item'
 import { useEffect, useRef, useState } from 'react'
 import getCategoryColor from './utils/getCategoryColor'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
+import ItemForAdmin from './components/ItemForAdmin'
 Modal.setAppElement('#root')
 
 function App() {
@@ -205,7 +206,6 @@ function App() {
 
         <CloseButton onClick={closeTransactionsModal}>❌</CloseButton>
       </Modal>
-
       <Header
         openModal={openModal}
         openTransaktionsModal={openTransaktionsModal}
@@ -227,6 +227,12 @@ function App() {
           </Main>
         </Route>
       </Router>
+      <Route path="/admin">
+        {items &&
+          items.map((item, index) => (
+            <ItemForAdmin key={item.id} data={item} />
+          ))}
+      </Route>
     </Wrapper>
   )
 }
