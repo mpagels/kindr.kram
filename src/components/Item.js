@@ -47,7 +47,7 @@ export default function Item({ data, index, user, saveNewItem }) {
 
   return (
     <ItemWrapper>
-      <Carousel>
+      <Carousel showThumbs={false}>
         {image_urls.map((url, index) => (
           <Image src={url} key={name} alt={name} />
         ))}
