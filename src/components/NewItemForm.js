@@ -1,0 +1,86 @@
+import { useForm } from 'react-hook-form'
+import styled from 'styled-components/macro'
+
+export default function NewItemForm() {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm()
+  return (
+    <FormWrapper>
+      <form onSubmit={handleSubmit()}>
+        {/* register your input into the hook by invoking the "register" function */}
+        <StyledLabel for="itemName">Itemname:</StyledLabel>
+        <StyledInput
+          id="itemName"
+          name="itemNAme"
+          defaultValue="Kinderwagen 3000"
+          {...register('itemName')}
+        />
+
+        {/* include validation with required or other standard HTML validation rules */}
+        <StyledLabel for="price">Preis:</StyledLabel>
+        <StyledInput
+          id="price"
+          name="price"
+          type="number"
+          min={0}
+          {...register('price', { required: true, min: 0 })}
+        />
+        {/* errors will return when field validation fails  */}
+        {errors.price && <Error>Preis eingeben!</Error>}
+        <StyledLabel for="description">Beschreibung</StyledLabel>
+        <StyledTextarea
+          id="description"
+          name="description"
+          col="35"
+          row="80"
+          {...register('description', { required: true })}
+        />
+        {errors.description && <Error>Beschreibung eingeben!</Error>}
+        <StyledSendButton>Item speichern</StyledSendButton>
+      </form>
+    </FormWrapper>
+  )
+}
+
+const StyledLabel = styled.label`
+  display: block;
+  padding-bottom: 10px;
+  font-size: 1.2em;
+`
+const FormWrapper = styled.div`
+  padding: 20px 40px; ;
+`
+const StyledInput = styled.input`
+  border-radius: 10px;
+  padding: 10px;
+  display: block;
+  width: 100%;
+`
+
+const Error = styled.span`
+  color: red;
+  font-size: 0.7em;
+`
+
+const StyledTextarea = styled.textarea`
+  display: block;
+  width: 100%;
+  height: 300px;
+  resize: none;
+`
+
+const StyledSendButton = styled.button`
+  all: unset;
+  cursor: pointer;
+  margin-top: 20px;
+  text-align: center;
+  border-radius: 10px;
+  padding: 10px;
+
+  width: 100%;
+  background-color: grey;
+`

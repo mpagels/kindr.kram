@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react'
 import getCategoryColor from './utils/getCategoryColor'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import ItemForAdmin from './components/ItemForAdmin'
+import NewItemForm from './components/NewItemForm'
 Modal.setAppElement('#root')
 
 function App() {
@@ -231,6 +232,9 @@ function App() {
             items.map((item, index) => (
               <ItemForAdmin key={item.id} data={item} />
             ))}
+        </Route>
+        <Route path="/create-item">
+          <NewItemForm />
         </Route>
       </Router>
     </Wrapper>
