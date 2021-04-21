@@ -1,11 +1,12 @@
 import styled from 'styled-components'
-
+import { Link } from 'react-router-dom'
 export default function Header({ openModal, budget, openTransaktionsModal }) {
   return (
     <HeaderWrapper>
       <TransactionButton onClick={openTransaktionsModal}>
         Transaktionen
       </TransactionButton>
+      <Link to="/create-item">create</Link>
       <ButtonWrapper>
         <Button onClick={openModal}>einzahlen</Button>
         <Budget>{`${budget}€`}</Budget>

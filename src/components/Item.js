@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { useState } from 'react'
 import 'react-responsive-carousel/lib/styles/carousel.min.css' // requires a loader
 import { Carousel } from 'react-responsive-carousel'
-
+import { Image } from 'cloudinary-react'
 export default function Item({ data, index, user, saveNewItem }) {
   const [spendIsOpen, setSpendIsOpen] = useState(false)
   const [input, setInput] = useState('')
@@ -44,12 +44,16 @@ export default function Item({ data, index, user, saveNewItem }) {
     setInput(0)
     setSpendIsOpen(false)
   }
-
+  console.log(data)
   return (
     <ItemWrapper>
       <Carousel showThumbs={false}>
         {image_urls.map((url, index) => (
-          <Image src={url} key={name} alt={name} />
+          <Image
+            cloudName="martinpagels-dev"
+            publicId={url}
+            key={`${url}_${index}`}
+          />
         ))}
       </Carousel>
       <PriceWrapper>
@@ -174,11 +178,11 @@ const Abortbutton = styled(WantSpendButton)`
   color: white;
 `
 
-const Image = styled.img`
+/* const Image = styled.img`
   margin: 10px 0;
   width: 100%;
   border-radius: 5px;
-`
+` */
 
 const PriceTag = styled.p`
   display: flex;

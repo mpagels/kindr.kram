@@ -7,9 +7,12 @@ import getCategoryColor from './utils/getCategoryColor'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import ItemForAdmin from './components/ItemForAdmin'
 import NewItemForm from './components/NewItemForm'
+import { useHistory } from 'react-router-dom'
+
 Modal.setAppElement('#root')
 
 function App() {
+  let history = useHistory()
   var subtitle
   const user = 'Anke'
   const [modalIsOpen, setIsOpen] = useState(false)
@@ -33,7 +36,7 @@ function App() {
     fetch('/item')
       .then((res) => res.json())
       .then((data) => setItems(data))
-  }, [])
+  }, [history])
 
   useEffect(() => {
     fetch(`/user/${user}`)
@@ -207,12 +210,12 @@ function App() {
 
         <CloseButton onClick={closeTransactionsModal}>❌</CloseButton>
       </Modal>
-      <Header
-        openModal={openModal}
-        openTransaktionsModal={openTransaktionsModal}
-        budget={budget}
-      />
       <Router>
+        <Header
+          openModal={openModal}
+          openTransaktionsModal={openTransaktionsModal}
+          budget={budget}
+        />
         <Route exact path="/">
           <Main>
             {items &&

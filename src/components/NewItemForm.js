@@ -1,7 +1,35 @@
 import { useForm } from 'react-hook-form'
 import styled from 'styled-components/macro'
-
+import { Image } from 'cloudinary-react'
+import { useState } from 'react'
+import Upload from '../assets/pngs/upload.png'
+import { useHistory } from 'react-router-dom'
 export default function NewItemForm() {
+  let history = useHistory()
+  const [uploadedPics, setUploadedPics] = useState([])
+  const myWidget = window.cloudinary.createUploadWidget(
+    {
+      cloudName: process.env.REACT_APP_CLOUDINARY_CLOUDNAME,
+      uploadPreset: process.env.REACT_APP_CLOUDINARY_UPLODAPRESET,
+      sources: ['local', 'camera', 'google_drive'],
+    },
+    (error, result) => {
+      if (!error && result && result.event === 'success') {
+        console.log(uploadedPics)
+        setUploadedPics((prevUploadedPics) => {
+          return [
+            ...prevUploadedPics,
+            {
+              public_id: result.info.public_id,
+              delete_token: result.info.delete_token,
+            },
+          ]
+        })
+        console.log('Done! Here is the image info: ', result.info)
+      }
+    }
+  )
+
   const {
     register,
     handleSubmit,
@@ -10,12 +38,12 @@ export default function NewItemForm() {
   } = useForm()
   return (
     <FormWrapper>
-      <form onSubmit={handleSubmit()}>
+      <form onSubmit={handleSubmit(createNewItem)}>
         {/* register your input into the hook by invoking the "register" function */}
         <StyledLabel for="itemName">Itemname:</StyledLabel>
         <StyledInput
           id="itemName"
-          name="itemNAme"
+          name="itemName"
           defaultValue="Kinderwagen 3000"
           {...register('itemName')}
         />
@@ -40,10 +68,90 @@ export default function NewItemForm() {
           {...register('description', { required: true })}
         />
         {errors.description && <Error>Beschreibung eingeben!</Error>}
+
+        <PictureUploadWrapper>
+          <UploadedPictures>
+            {uploadedPics.length > 0 &&
+              uploadedPics.map((image, index) => (
+                <Wrapper>
+                  <DeleteButton
+                    type="button"
+                    className="Delete_btn"
+                    onClick={() => handleDelete(image.delete_token, index)}
+                  >
+                    ❌
+                  </DeleteButton>
+                  <Image
+                    cloudName="martinpagels-dev"
+                    publicId={image.public_id}
+                    width="70"
+                    crop="scale"
+                  />
+                </Wrapper>
+              ))}
+          </UploadedPictures>
+          <UploadButton
+            type="button"
+            id="upload_widget"
+            onClick={() => myWidget.open()}
+            class="cloudinary-button"
+          >
+            <img src={Upload} alt="upload-botton" />
+          </UploadButton>
+        </PictureUploadWrapper>
+
         <StyledSendButton>Item speichern</StyledSendButton>
       </form>
     </FormWrapper>
   )
+
+  function createNewItem(data) {
+    console.log(data)
+    const { itemName, price, description } = data
+    const newItem = {
+      name: itemName,
+      price,
+      description,
+      image_urls: uploadedPics.map((image) => image.public_id),
+    }
+    fetch('/item/create', {
+      method: 'POST',
+      body: JSON.stringify(newItem),
+      headers: {
+        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data) {
+          history.push('/')
+        }
+      })
+  }
+
+  function handleDelete(delete_token, index) {
+    console.log(delete_token)
+    console.log(index)
+    const dataString = `token=${delete_token}`
+    fetch(`https://api.cloudinary.com/v1_1/martinpagels-dev/delete_by_token`, {
+      method: 'POST',
+      headers: new Headers({
+        'Content-Type': 'application/x-www-form-urlencoded', // <-- Specifying the Content-Type
+      }),
+      body: dataString,
+    }) // *GET, POST, PUT, DELETE, etc.)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data)
+        if (!data.error && data.result === 'ok') {
+          setUploadedPics([
+            ...uploadedPics.slice(0, index),
+            ...uploadedPics.slice(index + 1),
+          ])
+        }
+      })
+  }
 }
 
 const StyledLabel = styled.label`
@@ -80,7 +188,47 @@ const StyledSendButton = styled.button`
   text-align: center;
   border-radius: 10px;
   padding: 10px;
+  position: absolute;
+  bottom: 20px;
+  left: 30px;
+  right: -30px;
 
-  width: 100%;
   background-color: grey;
+`
+
+const PictureUploadWrapper = styled.div`
+  background-color: lightgray;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+`
+
+const UploadButton = styled.button`
+  all: unset;
+  cursor: pointer;
+  margin-right: 20px;
+  opacity: 0.6;
+`
+
+const UploadedPictures = styled.div`
+  width: 100%;
+  position: relative;
+  margin: 5px;
+  padding: 10px;
+  display: inline-block;
+`
+
+const Wrapper = styled.div`
+  position: relative;
+  display: inline-block;
+  margin: 0 10px;
+`
+
+const DeleteButton = styled.button`
+  all: unset;
+  position: absolute;
+  cursor: pointer;
+  top: -10px;
+  right: -10px;
 `
