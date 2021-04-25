@@ -1,22 +1,17 @@
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import Header from './components/Header'
 import Modal from 'react-modal'
 import Item from './components/Item'
 import { useEffect, useRef, useState } from 'react'
 import getCategoryColor from './utils/getCategoryColor'
-import {
-  BrowserRouter as Router,
-  Route,
-  useHistory,
-  useLocation,
-} from 'react-router-dom'
+import { Switch, Route, /* useHistory, */ useLocation } from 'react-router-dom'
 import ItemForAdmin from './components/ItemForAdmin'
 import NewItemForm from './components/NewItemForm'
+import LoginPage from './components/LoginPage'
 
 Modal.setAppElement('#root')
 
 function App() {
-  let history = useHistory()
   const location = useLocation()
   var subtitle
   const user = 'Anke'
@@ -215,13 +210,16 @@ function App() {
 
         <CloseButton onClick={closeTransactionsModal}>❌</CloseButton>
       </Modal>
-      <>
-        <Header
-          openModal={openModal}
-          openTransaktionsModal={openTransaktionsModal}
-          budget={budget}
-        />
+      <Switch>
+        <Route path="/login">
+          <LoginPage />
+        </Route>
         <Route exact path="/">
+          <Header
+            openModal={openModal}
+            openTransaktionsModal={openTransaktionsModal}
+            budget={budget}
+          />
           <Main>
             {items &&
               items.map((item, index) => (
@@ -244,7 +242,7 @@ function App() {
         <Route path="/create-item">
           <NewItemForm />
         </Route>
-      </>
+      </Switch>
     </Wrapper>
   )
 }
