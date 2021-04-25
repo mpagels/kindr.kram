@@ -1,37 +1,61 @@
-import kinderwagen from '../assets/jpg/1.JPG'
 import ProgressBar from 'react-percent-bar'
 import styled from 'styled-components'
 import { useState } from 'react'
-
-export default function Item({ isEnoughBudget, reduceBudget }) {
-  const [price, setPrice] = useState(150)
+import 'react-responsive-carousel/lib/styles/carousel.min.css' // requires a loader
+import { Carousel } from 'react-responsive-carousel'
+import { Image } from 'cloudinary-react'
+export default function Item({ data, index, user, saveNewItem }) {
   const [spendIsOpen, setSpendIsOpen] = useState(false)
-  const [donationVolumne, setDonationVolume] = useState(0)
   const [input, setInput] = useState('')
   const [isError, setIsError] = useState(false)
-
-  function isDonationFull() {
-    return donationVolumne + input > price
+  const [errorMessage, setErrorMessage] = useState()
+  const { description, donations, image_urls, name, price, _id } = data || {}
+  const donationVolumne = donations.reduce((pre, cur) => pre + cur.amount, 0)
+  function handleDonationClick() {
+    const donation = {
+      userName: user,
+      amount: Number(input),
+      category: 'donation',
+      item_id: _id,
+    }
+    fetch('/transaction/donate', {
+      method: 'POST',
+      body: JSON.stringify(donation),
+      headers: {
+        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status === 'error') {
+          setErrorMessage(data.message)
+          setIsError(true)
+        } else {
+          saveNewItem(index, data)
+          setErrorMessage()
+          setIsError(false)
+          setSpendIsOpen(false)
+        }
+      })
   }
 
-  function handleSpending() {
-    let toSpend
-    if (isDonationFull()) {
-      toSpend = price - donationVolumne
-    } else toSpend = input
-
-    if (isEnoughBudget(toSpend)) {
-      setIsError(false)
-      setDonationVolume(toSpend + donationVolumne)
-      reduceBudget(toSpend)
-      setSpendIsOpen(false)
-    } else setIsError(true)
+  function handleAbortSpendClick() {
+    setInput(0)
+    setSpendIsOpen(false)
   }
-
+  console.log(data)
   return (
     <ItemWrapper>
-      <header>Kinderwagen</header>
-      <Image src={kinderwagen} alt="kinderwagen" />
+      <Carousel showThumbs={false}>
+        {image_urls.map((url, index) => (
+          <Image
+            cloudName="martinpagels-dev"
+            publicId={url}
+            key={`${url}_${index}`}
+          />
+        ))}
+      </Carousel>
       <PriceWrapper>
         <CurrentDonation isFull={donationVolumne === price}>
           {donationVolumne === price
@@ -40,16 +64,8 @@ export default function Item({ isEnoughBudget, reduceBudget }) {
         </CurrentDonation>
         <PriceTag>{`Preis: ${price}€`}</PriceTag>
       </PriceWrapper>
-      <h2>Beschreibung</h2>
-      <Description>
-        I'm baby pitchfork typewriter ennui thundercats, 3 wolf moon mumblecore
-        chillwave man bun normcore knausgaard salvia. Humblebrag tote bag vape
-        fingerstache jean shorts kombucha YOLO heirloom organic blog. Af chia
-        banh mi tilde pop-up tousled austin etsy single-origin coffee quinoa
-        PBR&B freegan skateboard franzen tumeric. Cardigan artisan beard put a
-        bird on it marfa. Vape chicharrones craft beer pop-up single-origin
-        coffee humblebrag.
-      </Description>
+      <h2>{name}</h2>
+      <Description>{description}</Description>
       <ProgressBar
         colorShift={true}
         fillColor="orange"
@@ -65,11 +81,11 @@ export default function Item({ isEnoughBudget, reduceBudget }) {
               value={input}
               onChange={(e) => setInput(Number(e.target.value))}
             />
-            <SpendButton onClick={handleSpending}>Spenden</SpendButton>
+            <SpendButton onClick={handleDonationClick}>Spenden</SpendButton>
           </SpendWrapper>
           {isError && (
             <ErrorMessage>
-              Budget reicht nicht aus, um den Betrag zu spenden{' '}
+              {errorMessage}
               <RemoveErrorButton onClick={() => setIsError(false)}>
                 ❌
               </RemoveErrorButton>
@@ -78,9 +94,7 @@ export default function Item({ isEnoughBudget, reduceBudget }) {
         </div>
       )}
       {spendIsOpen ? (
-        <Abortbutton onClick={() => setSpendIsOpen(false)}>
-          Abbrechen
-        </Abortbutton>
+        <Abortbutton onClick={handleAbortSpendClick}>Abbrechen</Abortbutton>
       ) : (
         <WantSpendButton
           disabled={donationVolumne === price}
@@ -105,6 +119,7 @@ const PriceWrapper = styled.div`
 const ErrorMessage = styled.p`
   color: red;
   font-size: 0.7em;
+  text-align: center;
 `
 const SpendWrapper = styled.div`
   margin: 15px;
@@ -163,11 +178,11 @@ const Abortbutton = styled(WantSpendButton)`
   color: white;
 `
 
-const Image = styled.img`
+/* const Image = styled.img`
   margin: 10px 0;
   width: 100%;
   border-radius: 5px;
-`
+` */
 
 const PriceTag = styled.p`
   display: flex;
