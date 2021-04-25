@@ -6,5 +6,7 @@ export default function getCategoryColor(category) {
       return '#e76f51'
     case 'donation':
       return '#003049'
+    default:
+      return ''
   }
 }

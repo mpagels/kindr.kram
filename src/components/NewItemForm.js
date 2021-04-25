@@ -33,7 +33,7 @@ export default function NewItemForm() {
   const {
     register,
     handleSubmit,
-    watch,
+    /* watch, */
     formState: { errors },
   } = useForm()
   return (
