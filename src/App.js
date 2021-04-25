@@ -4,15 +4,20 @@ import Modal from 'react-modal'
 import Item from './components/Item'
 import { useEffect, useRef, useState } from 'react'
 import getCategoryColor from './utils/getCategoryColor'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import {
+  BrowserRouter as Router,
+  Route,
+  useHistory,
+  useLocation,
+} from 'react-router-dom'
 import ItemForAdmin from './components/ItemForAdmin'
 import NewItemForm from './components/NewItemForm'
-import { useHistory } from 'react-router-dom'
 
 Modal.setAppElement('#root')
 
 function App() {
   let history = useHistory()
+  const location = useLocation()
   var subtitle
   const user = 'Anke'
   const [modalIsOpen, setIsOpen] = useState(false)
@@ -36,7 +41,7 @@ function App() {
     fetch('/item')
       .then((res) => res.json())
       .then((data) => setItems(data))
-  }, [history])
+  }, [location])
 
   useEffect(() => {
     fetch(`/user/${user}`)
@@ -210,7 +215,7 @@ function App() {
 
         <CloseButton onClick={closeTransactionsModal}>❌</CloseButton>
       </Modal>
-      <Router>
+      <>
         <Header
           openModal={openModal}
           openTransaktionsModal={openTransaktionsModal}
@@ -239,7 +244,7 @@ function App() {
         <Route path="/create-item">
           <NewItemForm />
         </Route>
-      </Router>
+      </>
     </Wrapper>
   )
 }

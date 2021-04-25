@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { CircularProgressbar } from 'react-circular-progressbar'
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
 import getSumOfDonation from '../utils/getSumOfDonation'
 
@@ -10,7 +10,7 @@ export default function ItemForAdmin({ data }) {
   return (
     <ItemWrapper>
       <ContentWrapper>
-        <h2>Kinderwagen</h2>
+        <h2>{name}</h2>
         <div>
           <p>Eingestellter Preis: {price}€</p>
           <p>Fehlt noch: {price - sumOfDonation}€</p>
@@ -18,7 +18,14 @@ export default function ItemForAdmin({ data }) {
         </div>
       </ContentWrapper>
       <CircleWrapper>
-        <CircularProgressbar value={percentage} text={`${percentage}%`} />
+        <CircularProgressbar
+          value={percentage}
+          text={`${percentage}%`}
+          styles={buildStyles({
+            pathColor: percentage === 100 ? '#83c5be' : '#3e98c7',
+            textColor: percentage === 100 ? '#83c5be' : '#3e98c7',
+          })}
+        />
       </CircleWrapper>
     </ItemWrapper>
   )

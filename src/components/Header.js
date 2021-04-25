@@ -1,12 +1,20 @@
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 export default function Header({ openModal, budget, openTransaktionsModal }) {
+  const { pathname } = useLocation()
+
   return (
     <HeaderWrapper>
       <TransactionButton onClick={openTransaktionsModal}>
         Transaktionen
       </TransactionButton>
-      <Link to="/create-item">create</Link>
+      {pathname === '/' ? (
+        <Link to="/create-item">create</Link>
+      ) : (
+        <Link to="/">zurück</Link>
+      )}
+
       <ButtonWrapper>
         <Button onClick={openModal}>einzahlen</Button>
         <Budget>{`${budget}€`}</Budget>
