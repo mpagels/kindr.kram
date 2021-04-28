@@ -1,11 +1,9 @@
 import styled from 'styled-components/macro'
 import Header from './components/Header'
 import Modal from 'react-modal'
-import Item from './components/Item'
 import { useEffect, useState } from 'react'
 
-import { Switch, Route, /* useHistory, */ useLocation } from 'react-router-dom'
-import ItemForAdmin from './components/ItemForAdmin'
+import { Switch, Route, useLocation } from 'react-router-dom'
 import NewItemForm from './components/NewItemForm'
 import LoginPage from './pages/LoginPage'
 import AdminPage from './pages/AdminPage'
@@ -13,6 +11,7 @@ import AdminPage from './pages/AdminPage'
 import ItemContext from './context/ItemContext'
 import OwnModal from './components/OwnModal'
 import useModal from './hooks/useModal'
+import UserPage from './pages/UserPage'
 
 Modal.setAppElement('#root')
 
@@ -88,18 +87,7 @@ function App() {
               openTransaktionsModal={openTransaktionsModal}
               budget={budget}
             />
-            <Main>
-              {items &&
-                items.map((item, index) => (
-                  <Item
-                    key={item.id}
-                    data={item}
-                    index={index}
-                    user={user}
-                    saveNewItem={saveNewItem}
-                  />
-                ))}
-            </Main>
+            <UserPage saveNewItem={saveNewItem} user={user} />
           </Route>
           <Route path="/admin">
             <AdminPage />
@@ -118,5 +106,3 @@ export default App
 const Wrapper = styled.div`
   padding-top: 80px;
 `
-
-const Main = styled.main``
