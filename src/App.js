@@ -2,12 +2,15 @@ import styled from 'styled-components/macro'
 import Header from './components/Header'
 import Modal from 'react-modal'
 import Item from './components/Item'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, createContext } from 'react'
 import getCategoryColor from './utils/getCategoryColor'
 import { Switch, Route, /* useHistory, */ useLocation } from 'react-router-dom'
 import ItemForAdmin from './components/ItemForAdmin'
 import NewItemForm from './components/NewItemForm'
 import LoginPage from './components/LoginPage'
+import AdminPage from './pages/AdminPage'
+
+import ItemContext from './context/ItemContext'
 
 Modal.setAppElement('#root')
 
@@ -210,39 +213,38 @@ function App() {
 
         <CloseButton onClick={closeTransactionsModal}>❌</CloseButton>
       </Modal>
-      <Switch>
-        <Route path="/login">
-          <LoginPage />
-        </Route>
-        <Route exact path="/">
-          <Header
-            openModal={openModal}
-            openTransaktionsModal={openTransaktionsModal}
-            budget={budget}
-          />
-          <Main>
-            {items &&
-              items.map((item, index) => (
-                <Item
-                  key={item.id}
-                  data={item}
-                  index={index}
-                  user={user}
-                  saveNewItem={saveNewItem}
-                />
-              ))}
-          </Main>
-        </Route>
-        <Route path="/admin">
-          {items &&
-            items.map((item, index) => (
-              <ItemForAdmin key={item.id} data={item} />
-            ))}
-        </Route>
-        <Route path="/create-item">
-          <NewItemForm />
-        </Route>
-      </Switch>
+      <ItemContext.Provider value={items}>
+        <Switch>
+          <Route path="/login">
+            <LoginPage />
+          </Route>
+          <Route exact path="/">
+            <Header
+              openModal={openModal}
+              openTransaktionsModal={openTransaktionsModal}
+              budget={budget}
+            />
+            <Main>
+              {items &&
+                items.map((item, index) => (
+                  <Item
+                    key={item.id}
+                    data={item}
+                    index={index}
+                    user={user}
+                    saveNewItem={saveNewItem}
+                  />
+                ))}
+            </Main>
+          </Route>
+          <Route path="/admin">
+            <AdminPage />
+          </Route>
+          <Route path="/create-item">
+            <NewItemForm />
+          </Route>
+        </Switch>
+      </ItemContext.Provider>
     </Wrapper>
   )
 }
