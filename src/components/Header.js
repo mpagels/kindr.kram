@@ -1,23 +1,35 @@
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
+import { ReactComponent as AccountLogo } from '../assets/svg/account_2.svg'
+import { ReactComponent as SavingLogo } from '../assets/svg/savings.svg'
+import { ReactComponent as PriceLogo } from '../assets/svg/price.svg'
+import { ReactComponent as AddLogo } from '../assets/svg/add.svg'
+import { ReactComponent as CancelLogo } from '../assets/svg/cancel.svg'
+
 export default function Header({ openModal, budget, openTransaktionsModal }) {
   const { pathname } = useLocation()
 
   return (
     <HeaderWrapper>
-      <TransactionButton onClick={openTransaktionsModal}>
-        Transaktionen
-      </TransactionButton>
+      <AccountButton onClick={openTransaktionsModal} />
+
       {pathname === '/' ? (
-        <Link to="/create-item">create</Link>
+        <Link to="/create-item">
+          <AddLogo style={{ fill: '#457b9d' }} />
+        </Link>
       ) : (
-        <Link to="/">zurück</Link>
+        <Link to="/">
+          <CancelLogo style={{ fill: '#e07a5f' }} />
+        </Link>
       )}
 
       <ButtonWrapper>
-        <Button onClick={openModal}>einzahlen</Button>
-        <Budget>{`${budget}€`}</Budget>
+        <MoneyButton onClick={openModal} />
+        <Budget>
+          <SavingLogo style={{ fill: '#457b9d' }} />
+          {`${budget}€`}
+        </Budget>
       </ButtonWrapper>
     </HeaderWrapper>
   )
@@ -41,37 +53,29 @@ const HeaderWrapper = styled.header`
     0 100px 80px rgba(0, 0, 0, 0.07);
 `
 
-const Button = styled.button`
-  all: unset;
+const MoneyButton = styled(PriceLogo)`
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 15px;
-  background-color: #e5e5e5;
-  padding: 10px;
-  width: 100px;
+  fill: #457b9d;
   margin-right: 20px;
-  font-size: 0.8em;
-  font-weight: bold;
 `
-const TransactionButton = styled(Button)`
-  background-color: whitesmoke;
-  color: darkgray;
+const AccountButton = styled(AccountLogo)`
+  cursor: pointer;
+  fill: #457b9d;
 `
 
 const ButtonWrapper = styled.div`
   display: flex;
+  align-items: center;
 `
 const Budget = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
   border-radius: 15px;
-  background-color: #457b9d;
+  border: 1px solid #457b9d;
   padding: 10px;
   width: 100px;
-  color: whitesmoke;
+  color: #457b9d;
   height: 50px;
   font-weight: bold;
 `
