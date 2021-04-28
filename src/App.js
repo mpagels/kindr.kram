@@ -90,9 +90,19 @@ function App() {
             <UserPage saveNewItem={saveNewItem} user={user} />
           </Route>
           <Route path="/admin">
+            <Header
+              openModal={openModal}
+              openTransaktionsModal={openTransaktionsModal}
+              budget={budget}
+            />
             <AdminPage />
           </Route>
           <Route path="/create-item">
+            <Header
+              openModal={openModal}
+              openTransaktionsModal={openTransaktionsModal}
+              budget={budget}
+            />
             <NewItemForm />
           </Route>
         </Switch>
