@@ -7,7 +7,7 @@ import getCategoryColor from './utils/getCategoryColor'
 import { Switch, Route, /* useHistory, */ useLocation } from 'react-router-dom'
 import ItemForAdmin from './components/ItemForAdmin'
 import NewItemForm from './components/NewItemForm'
-import LoginPage from './components/LoginPage'
+import LoginPage from './pages/LoginPage'
 import AdminPage from './pages/AdminPage'
 
 import ItemContext from './context/ItemContext'
