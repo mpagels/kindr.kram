@@ -3,8 +3,8 @@ import { useContext } from 'react'
 import ItemContext from '../context/ItemContext'
 import Item from '../components/Item'
 
-export default function UserPage({ saveNewItem, user }) {
-  const items = useContext(ItemContext)
+export default function UserPage({ user }) {
+  const { items, saveNewItem } = useContext(ItemContext)
 
   return (
     <Main>

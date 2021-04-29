@@ -9,17 +9,39 @@ export default function LoginPage() {
       <LoginArea>
         <LoginLogo />
         <StyledForm onSubmit={handleLogin}>
-          <StyledInput placeholder="Username"></StyledInput>
-          <StyledInput placeholder="Passwort"></StyledInput>
-          <LoginButton>EINLOGGEN</LoginButton>
+          <StyledInput id="username" placeholder="Username"></StyledInput>
+          <StyledInput id="password" placeholder="Passwort"></StyledInput>
+          <LoginButton type="submit">EINLOGGEN</LoginButton>
         </StyledForm>
       </LoginArea>
     </PageWrapper>
   )
 
-  function handleLogin() {
-    history.push('/')
+  function handleLogin(event) {
+    event.preventDefault()
+    console.log(event.target)
+    const { username, password } = event.target
+    const data = { userName: username.value, password: password.value }
+    console.log(data)
+    fetch('/api/login/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        savetoLocalStorage(data)
+        localStorage.setItem('isLoggedIn', JSON.stringify(true))
+        history.push('/items')
+      })
   }
+}
+
+function savetoLocalStorage(token) {
+  console.log(token)
+  localStorage.setItem('token', JSON.stringify(token))
 }
 
 const PageWrapper = styled.div`
