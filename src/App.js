@@ -27,6 +27,11 @@ function App() {
     JSON.parse(localStorage.getItem('isLoggedIn'))
   )
 
+  const [budget, setBudet] = useState(0)
+  const [transactions, setTransactions] = useState()
+  const [items, setItems] = useState()
+
+  console.log('user', user)
   const {
     modalIsOpen,
     setIsOpen,
@@ -38,10 +43,6 @@ function App() {
     openTransaktionsModal,
   } = useModal()
 
-  const [budget, setBudet] = useState(0)
-  const [transactions, setTransactions] = useState()
-  const [items, setItems] = useState()
-
   useEffect(() => {
     fetch('/item')
       .then((res) => res.json())
@@ -49,12 +50,16 @@ function App() {
   }, [location])
 
   useEffect(() => {
-    fetch(`/user/${user}`)
+    console.log('run')
+    fetch(`/user/${user.username}`)
       .then((res) => res.json())
       .then((data) => {
-        setBudet(data.from_location.budget)
+        if (!data.message) {
+          console.log('data', data.from_location)
+          setBudet(data.from_location.budget)
+        }
       })
-  }, [items])
+  }, [items, user])
   useEffect(() => {
     fetch('/transaction/Toerpt')
       .then((res) => res.json())
