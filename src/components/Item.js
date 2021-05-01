@@ -141,7 +141,7 @@ const SpendInput = styled.input`
 const ItemWrapper = styled.section`
   display: flex;
   flex-direction: column;
-
+  width: 330px;
   border-radius: 10px;
   margin: 15px;
   background-color: white;
