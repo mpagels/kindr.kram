@@ -54,7 +54,7 @@ function App() {
     fetch(`/user/${user.username}`)
       .then((res) => res.json())
       .then((data) => {
-        if (!data.message) {
+        if (!data.message && data.from_location) {
           console.log('data', data.from_location)
           setBudet(data.from_location.budget)
         }
@@ -106,23 +106,32 @@ function App() {
                   <Redirect to="/login" />
                 )}
               </Route>
-              <Route path="/admin">
+              {/*  <Route path="/admin">
                 <Header
                   openModal={openModal}
                   openTransaktionsModal={openTransaktionsModal}
                   budget={budget}
                 />
                 <AdminPage />
-              </Route>
-              <Route path="/create-item">
+              </Route> */}
+              {/* <Route path="/create-item">
                 <Header
                   openModal={openModal}
                   openTransaktionsModal={openTransaktionsModal}
                   budget={budget}
                 />
                 <NewItemForm />
-              </Route>
-              <PrivateRoute path="/items" component={UserPage} />
+              </Route> */}
+
+              <PrivateRoute
+                path="/create-item"
+                component={user.role === 'admin' ? NewItemForm : LoginPage}
+              />
+
+              <PrivateRoute
+                path="/items"
+                component={user.role === 'admin' ? AdminPage : UserPage}
+              />
             </Switch>
           </ItemContext.Provider>
         </UserContext.Provider>
