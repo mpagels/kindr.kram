@@ -95,6 +95,10 @@ function App() {
                 path="/items"
                 component={user.role === 'admin' ? AdminPage : UserPage}
               />
+              <PrivateRoute
+                path="/items-for-admin"
+                component={user.role === 'admin' && UserPage}
+              />
             </Switch>
           </ItemContext.Provider>
         </UserContext.Provider>

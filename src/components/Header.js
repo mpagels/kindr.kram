@@ -1,54 +1,87 @@
 import styled from 'styled-components'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
 import { ReactComponent as AccountLogo } from '../assets/svg/account_2.svg'
 import { ReactComponent as SavingLogo } from '../assets/svg/savings.svg'
 import { ReactComponent as AddLogo } from '../assets/svg/add.svg'
 import { ReactComponent as ListLogo } from '../assets/svg/list.svg'
 import { ReactComponent as CancelLogo } from '../assets/svg/cancel.svg'
+import { ReactComponent as AdminLogo } from '../assets/svg/admin-panel.svg'
 import { useContext, useState } from 'react'
 import UserContext from '../context/UserContext'
 
 export default function Header({ budget }) {
   const { pathname } = useLocation()
+  const history = useHistory()
+
   const { user } = useContext(UserContext)
 
-  console.log('header', user)
-  console.log('patname', pathname)
-  let createButton
-  if (user.role === 'admin') {
-    pathname === '/items'
-      ? (createButton = (
+  const createButton = () => {
+    if (user.role === 'admin') {
+      if (pathname === '/create-item') {
+        return (
+          <CancelLogo
+            style={{ fill: '#e07a5f', cursor: 'pointer' }}
+            onClick={() => history.goBack()}
+          />
+        )
+      } else {
+        return (
           <Link to="/create-item">
             <AddLogo style={{ fill: '#457b9d' }} />
           </Link>
-        ))
-      : (createButton = (
-          <Link to="/">
-            <CancelLogo style={{ fill: '#e07a5f' }} />
+        )
+      }
+    } else {
+      return ''
+    }
+  }
+  const adminButton = () => {
+    if (user.role === 'admin') {
+      if (pathname === '/items-for-admin') {
+        return (
+          <Link to="/items">
+            <AdminLogo style={{ fill: '#457b9d', cursor: 'pointer' }} />
           </Link>
-        ))
+        )
+      } else {
+        return (
+          <Link to="/items-for-admin">
+            <ListLogo style={{ fill: '#457b9d' }} />
+          </Link>
+        )
+      }
+    } else {
+      return ''
+    }
   }
 
   return (
     <HeaderWrapper>
-      {pathname === '/items' ? (
+      {pathname === '/items' || pathname === '/items-for-admin' ? (
         <Link to="/profil">
           <AccountButton />
+        </Link>
+      ) : user.role === 'admin' ? (
+        <Link to="/items">
+          <AdminLogo style={{ fill: '#457b9d', cursor: 'pointer' }} />
         </Link>
       ) : (
         <Link to="/items">
           <ListButton />
         </Link>
       )}
-      {createButton}
-
-      <ButtonWrapper>
-        <Budget>
-          <SavingLogo style={{ fill: '#457b9d' }} />
-          {`${budget}€`}
-        </Budget>
-      </ButtonWrapper>
+      {createButton()}
+      {user.role === 'admin' ? (
+        adminButton()
+      ) : (
+        <ButtonWrapper>
+          <Budget>
+            <SavingLogo style={{ fill: '#457b9d' }} />
+            {`${budget}€`}
+          </Budget>
+        </ButtonWrapper>
+      )}
     </HeaderWrapper>
   )
 }

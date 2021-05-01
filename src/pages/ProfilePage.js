@@ -78,7 +78,7 @@ export default function ProfilePage() {
       category: 'deposit',
     }
 
-    await fetch('/transaction/deposit', {
+    const depositResponse = await fetch('/transaction/deposit', {
       method: 'POST',
       body: JSON.stringify(deposit),
       headers: {
@@ -86,9 +86,14 @@ export default function ProfilePage() {
         // 'Content-Type': 'application/x-www-form-urlencoded',
       },
     })
-
-    inputRef.current.value = ''
-    getTransactionsAndSetBudget()
+    const depositData = await depositResponse.json()
+    if (depositData.status === 'error') {
+      setError(depositData.message)
+    } else {
+      inputRef.current.value = ''
+      getTransactionsAndSetBudget()
+      setError(false)
+    }
   }
 
   async function makeWithDraw() {

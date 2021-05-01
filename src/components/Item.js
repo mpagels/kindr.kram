@@ -4,13 +4,14 @@ import { useState } from 'react'
 import 'react-responsive-carousel/lib/styles/carousel.min.css' // requires a loader
 import { Carousel } from 'react-responsive-carousel'
 import { Image } from 'cloudinary-react'
-export default function Item({ data, index, user, saveNewItem }) {
+export default function Item({ data, isAdmin, index, user, saveNewItem }) {
   const [spendIsOpen, setSpendIsOpen] = useState(false)
   const [input, setInput] = useState('')
   const [isError, setIsError] = useState(false)
   const [errorMessage, setErrorMessage] = useState()
   const { description, donations, image_urls, name, price, _id } = data || {}
   const donationVolumne = donations.reduce((pre, cur) => pre + cur.amount, 0)
+
   function handleDonationClick() {
     const donation = {
       userName: user,
@@ -95,13 +96,15 @@ export default function Item({ data, index, user, saveNewItem }) {
       )}
       {spendIsOpen ? (
         <Abortbutton onClick={handleAbortSpendClick}>Abbrechen</Abortbutton>
-      ) : (
+      ) : !isAdmin ? (
         <WantSpendButton
           disabled={donationVolumne === price}
           onClick={() => setSpendIsOpen(true)}
         >
           Spenden
         </WantSpendButton>
+      ) : (
+        ''
       )}
     </ItemWrapper>
   )

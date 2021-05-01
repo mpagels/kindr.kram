@@ -16,6 +16,7 @@ export default function UserPage() {
             key={item.id}
             data={item}
             index={index}
+            isAdmin={user.role === 'admin'}
             user={user.username}
             saveNewItem={saveNewItem}
           />

@@ -5,6 +5,7 @@ export default function useIsUserAuthenticated(setContextUser, setIsLoggedIn) {
   const [user, setUser] = useState({})
 
   useEffect(() => {
+    console.log('Drin in /auth & im useEffect')
     //const token = JSON.parse(localStorage.getItem("token"));
     //console.log("token", token);
     fetch('/auth', {
