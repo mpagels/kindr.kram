@@ -6,23 +6,34 @@ import { ReactComponent as SavingLogo } from '../assets/svg/savings.svg'
 import { ReactComponent as PriceLogo } from '../assets/svg/price.svg'
 import { ReactComponent as AddLogo } from '../assets/svg/add.svg'
 import { ReactComponent as CancelLogo } from '../assets/svg/cancel.svg'
+import { useContext } from 'react'
+import UserContext from '../context/UserContext'
 
 export default function Header({ openModal, budget, openTransaktionsModal }) {
   const { pathname } = useLocation()
+  const { user } = useContext(UserContext)
+  console.log('header', user)
+
+  let createButton
+  if (user.role === 'admin') {
+    pathname === '/items'
+      ? (createButton = (
+          <Link to="/create-item">
+            <AddLogo style={{ fill: '#457b9d' }} />
+          </Link>
+        ))
+      : (createButton = (
+          <Link to="/">
+            <CancelLogo style={{ fill: '#e07a5f' }} />
+          </Link>
+        ))
+  }
 
   return (
     <HeaderWrapper>
       <AccountButton onClick={openTransaktionsModal} />
 
-      {pathname === '/' ? (
-        <Link to="/create-item">
-          <AddLogo style={{ fill: '#457b9d' }} />
-        </Link>
-      ) : (
-        <Link to="/">
-          <CancelLogo style={{ fill: '#e07a5f' }} />
-        </Link>
-      )}
+      {createButton}
 
       <ButtonWrapper>
         <MoneyButton onClick={openModal} />
