@@ -3,17 +3,18 @@ import { Link } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
 import { ReactComponent as AccountLogo } from '../assets/svg/account_2.svg'
 import { ReactComponent as SavingLogo } from '../assets/svg/savings.svg'
-import { ReactComponent as PriceLogo } from '../assets/svg/price.svg'
 import { ReactComponent as AddLogo } from '../assets/svg/add.svg'
+import { ReactComponent as ListLogo } from '../assets/svg/list.svg'
 import { ReactComponent as CancelLogo } from '../assets/svg/cancel.svg'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import UserContext from '../context/UserContext'
 
-export default function Header({ openModal, budget, openTransaktionsModal }) {
+export default function Header({ budget }) {
   const { pathname } = useLocation()
   const { user } = useContext(UserContext)
-  console.log('header', user)
 
+  console.log('header', user)
+  console.log('patname', pathname)
   let createButton
   if (user.role === 'admin') {
     pathname === '/items'
@@ -31,12 +32,18 @@ export default function Header({ openModal, budget, openTransaktionsModal }) {
 
   return (
     <HeaderWrapper>
-      <AccountButton onClick={openTransaktionsModal} />
-
+      {pathname === '/items' ? (
+        <Link to="/profil">
+          <AccountButton />
+        </Link>
+      ) : (
+        <Link to="/items">
+          <ListButton />
+        </Link>
+      )}
       {createButton}
 
       <ButtonWrapper>
-        <MoneyButton onClick={openModal} />
         <Budget>
           <SavingLogo style={{ fill: '#457b9d' }} />
           {`${budget}€`}
@@ -64,12 +71,11 @@ const HeaderWrapper = styled.header`
     0 100px 80px rgba(0, 0, 0, 0.07);
 `
 
-const MoneyButton = styled(PriceLogo)`
+const AccountButton = styled(AccountLogo)`
   cursor: pointer;
   fill: #457b9d;
-  margin-right: 20px;
 `
-const AccountButton = styled(AccountLogo)`
+const ListButton = styled(ListLogo)`
   cursor: pointer;
   fill: #457b9d;
 `

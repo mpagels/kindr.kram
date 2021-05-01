@@ -1,6 +1,4 @@
 import styled from 'styled-components/macro'
-import Header from './components/Header'
-import Modal from 'react-modal'
 import { useEffect, useState } from 'react'
 
 import { Switch, Route, useLocation, Redirect } from 'react-router-dom'
@@ -12,59 +10,36 @@ import ItemContext from './context/ItemContext'
 import UserContext from './context/UserContext'
 import MiscContext from './context/TestContext'
 
-import OwnModal from './components/OwnModal'
-import useModal from './hooks/useModal'
 import UserPage from './pages/UserPage'
 import PrivateRoute from './components/PrivateRoute'
-
-Modal.setAppElement('#root')
+import ProfilePage from './pages/ProfilePage'
 
 function App() {
   const location = useLocation()
-
+  const [budget, setBudet] = useState(0)
   const [user, setContextUser] = useState('')
   const [isLoggedIn, setIsLoggedIn] = useState(
     JSON.parse(localStorage.getItem('isLoggedIn'))
   )
 
-  const [budget, setBudet] = useState(0)
-  const [transactions, setTransactions] = useState()
   const [items, setItems] = useState()
 
   console.log('user', user)
-  const {
-    modalIsOpen,
-    setIsOpen,
-    transaktionsModalIsOpen,
-    setTransaktionsModalIsOpen,
-    error,
-    setError,
-    openModal,
-    openTransaktionsModal,
-  } = useModal()
+
+  fetch(`/user/${user.username}`)
+    .then((res) => res.json())
+    .then((data) => {
+      if (!data.message && data.from_location) {
+        console.log('data', data.from_location)
+        setBudet(data.from_location.budget)
+      }
+    }, [])
 
   useEffect(() => {
     fetch('/item')
       .then((res) => res.json())
       .then((data) => setItems(data))
   }, [location])
-
-  useEffect(() => {
-    console.log('run')
-    fetch(`/user/${user.username}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (!data.message && data.from_location) {
-          console.log('data', data.from_location)
-          setBudet(data.from_location.budget)
-        }
-      })
-  }, [items, user])
-  useEffect(() => {
-    fetch('/transaction/Toerpt')
-      .then((res) => res.json())
-      .then((data) => setTransactions(data[0].transactions))
-  }, [budget, items])
 
   function saveNewItem(index, newItem) {
     const newItems = [
@@ -77,20 +52,7 @@ function App() {
 
   return (
     <Wrapper>
-      <OwnModal
-        user={user}
-        setBudet={setBudet}
-        setIsOpen={setIsOpen}
-        modalIsOpen={modalIsOpen}
-        error={error}
-        setError={setError}
-        transaktionsModalIsOpen={transaktionsModalIsOpen}
-        transactions={transactions}
-        setTransaktionsModalIsOpen={setTransaktionsModalIsOpen}
-      />
-      <MiscContext.Provider
-        value={{ budget, openModal, openTransaktionsModal }}
-      >
+      <MiscContext.Provider value={{ budget, setBudet }}>
         <UserContext.Provider
           value={{ user, setContextUser, isLoggedIn, setIsLoggedIn }}
         >
@@ -123,6 +85,7 @@ function App() {
                 <NewItemForm />
               </Route> */}
 
+              <PrivateRoute path="/profil" component={ProfilePage} />
               <PrivateRoute
                 path="/create-item"
                 component={user.role === 'admin' ? NewItemForm : LoginPage}

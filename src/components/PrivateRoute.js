@@ -7,7 +7,7 @@ import Header from './Header'
 
 export default function PrivateRoute({ component: Component, ...rest }) {
   const { setContextUser, isLoggedIn, setIsLoggedIn } = useContext(UserContext)
-  const { budget, openModal, openTransaktionsModal } = useContext(MiscContext)
+  const { budget } = useContext(MiscContext)
   const { isAuthenticated, user } = useIsUserAuthenticated(
     setContextUser,
     setIsLoggedIn
@@ -25,11 +25,7 @@ export default function PrivateRoute({ component: Component, ...rest }) {
           <Redirect to="/" />
         ) : (
           <>
-            <Header
-              openModal={openModal}
-              openTransaktionsModal={openTransaktionsModal}
-              budget={budget}
-            />
+            <Header budget={budget} />
             <Component {...props} user={user} />
           </>
         )
