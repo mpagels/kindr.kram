@@ -7,7 +7,7 @@ import { ReactComponent as AddLogo } from '../assets/svg/add.svg'
 import { ReactComponent as ListLogo } from '../assets/svg/list.svg'
 import { ReactComponent as CancelLogo } from '../assets/svg/cancel.svg'
 import { ReactComponent as AdminLogo } from '../assets/svg/admin-panel.svg'
-import { useContext, useState } from 'react'
+import { useContext } from 'react'
 import UserContext from '../context/UserContext'
 
 export default function Header({ budget }) {
