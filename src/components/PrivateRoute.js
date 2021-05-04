@@ -8,30 +8,31 @@ import Header from './Header'
 export default function PrivateRoute({ component: Component, ...rest }) {
   /* const { setContextUser, isLoggedIn, setIsLoggedIn } = useContext(UserContext) */
   const { budget } = useContext(MiscContext)
-/*   const { isAuthenticated, user } = useIsUserAuthenticated(
+  const { user, isLoading } = useContext(UserContext)
+  /*   const { isAuthenticated, user } = useIsUserAuthenticated(
     setContextUser,
     setIsLoggedIn
-   */)
+   )*/
 
   // function to a route, get request ( 403 or 202)
-  // await 
-  if (isAuthenticated === null) {
+  // await
+  if (isLoading) {
     return <></>
   }
-  console.log('hof', isAuthenticated, isLoggedIn)
-  return (
-    <Route
-      {...rest}
-      render={(props) =>
-        !isAuthenticated ? (
-          <Redirect to="/" />
-        ) : (
+
+  if (user) {
+    return (
+      <Route
+        {...rest}
+        render={(props) => (
           <>
             <Header budget={budget} />
             <Component {...props} user={user} />
           </>
-        )
-      }
-    />
-  )
+        )}
+      />
+    )
+  } else {
+    return <Redirect to="/login" />
+  }
 }

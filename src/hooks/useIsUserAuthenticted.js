@@ -32,7 +32,7 @@ export default function useIsUserAuthenticated(setContextUser, setIsLoggedIn) {
           setIsLoggedIn(true)
           localStorage.setItem('isLoggedIn', JSON.stringify(true))
         } else {
-          setIsAuthenticated(false)
+          setIsAuthenticated(null)
           setUser({})
           setContextUser({})
           setIsLoggedIn(false)

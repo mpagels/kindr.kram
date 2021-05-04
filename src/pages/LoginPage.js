@@ -1,8 +1,11 @@
 import { ReactComponent as LoginLogo } from '../assets/svg/Login_logo.svg'
 import styled from 'styled-components/macro'
-import { useHistory } from 'react-router-dom'
+
+import useAuth from '../hooks/useAuth'
+
 export default function LoginPage() {
-  const history = useHistory()
+  const { loginUser, error } = useAuth()
+
   return (
     <PageWrapper>
       <Title>kindr.kram</Title>
@@ -17,31 +20,16 @@ export default function LoginPage() {
     </PageWrapper>
   )
 
-  function handleLogin(event) {
+  async function handleLogin(event) {
     event.preventDefault()
     console.log(event.target)
-    const { username, password } = event.target
-    const data = { userName: username.value, password: password.value }
-    console.log(data)
-    fetch('/api/login/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        savetoLocalStorage(data)
-        localStorage.setItem('isLoggedIn', JSON.stringify(true))
-        history.push('/items')
-      })
+    await loginUser(event.target)
   }
-}
 
-function savetoLocalStorage(token) {
-  console.log(token)
-  localStorage.setItem('token', JSON.stringify(token))
+  function savetoLocalStorage(token) {
+    console.log(token)
+    localStorage.setItem('token', JSON.stringify(token))
+  }
 }
 
 const PageWrapper = styled.div`

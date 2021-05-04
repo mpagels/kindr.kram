@@ -7,7 +7,7 @@ import getCategoryColor from '../utils/getCategoryColor'
 export default function ProfilePage() {
   const [error, setError] = useState('')
   const { setBudet } = useContext(MiscContext)
-  const { user } = useContext(UserContext)
+  const { user, setUser } = useContext(UserContext)
   const [transactions, setTransactions] = useState()
 
   const inputRef = useRef()
@@ -15,7 +15,11 @@ export default function ProfilePage() {
   useEffect(() => {
     fetch('/transaction/Toerpt')
       .then((res) => res.json())
-      .then((data) => setTransactions(data[0].transactions))
+      .then((data) => {
+        data.user === null
+          ? setUser(null)
+          : setTransactions(data[0].transactions)
+      })
   }, [])
 
   return (

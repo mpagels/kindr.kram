@@ -13,27 +13,30 @@ import MiscContext from './context/TestContext'
 import UserPage from './pages/UserPage'
 import PrivateRoute from './components/PrivateRoute'
 import ProfilePage from './pages/ProfilePage'
+import useFindUser from './hooks/useFindUser'
 
 function App() {
   const location = useLocation()
   const [budget, setBudet] = useState(0)
-  const [user, setContextUser] = useState('')
-  const [isLoggedIn, setIsLoggedIn] = useState(
+  /*  const [user, setContextUser] = useState('' *)
+ /*  const [isLoggedIn, setIsLoggedIn] = useState(
     JSON.parse(localStorage.getItem('isLoggedIn'))
-  )
+  ) */
+
+  const { user, setUser, isLoading } = useFindUser()
 
   const [items, setItems] = useState()
 
   console.log('user', user)
 
-  fetch(`/user/${user.username}`)
+  /*   fetch(`/user/${user.username}`)
     .then((res) => res.json())
     .then((data) => {
       if (!data.message && data.from_location) {
         console.log('data', data.from_location)
         setBudet(data.from_location.budget)
       }
-    }, [])
+    }, [] ) */
 
   useEffect(() => {
     fetch('/item')
@@ -53,20 +56,14 @@ function App() {
   return (
     <Wrapper>
       <MiscContext.Provider value={{ budget, setBudet }}>
-        <UserContext.Provider
-          value={{ user, setContextUser, isLoggedIn, setIsLoggedIn }}
-        >
+        <UserContext.Provider value={{ user, setUser, isLoading }}>
           <ItemContext.Provider value={{ items, saveNewItem }}>
             <Switch>
               <Route path="/login">
                 <LoginPage />
               </Route>
               <Route exact path="/">
-                {isLoggedIn ? (
-                  <Redirect to="/items" />
-                ) : (
-                  <Redirect to="/login" />
-                )}
+                {user ? <Redirect to="/items" /> : <Redirect to="/login" />}
               </Route>
               {/*  <Route path="/admin">
                 <Header
@@ -88,16 +85,16 @@ function App() {
               <PrivateRoute path="/profil" component={ProfilePage} />
               <PrivateRoute
                 path="/create-item"
-                component={user.role === 'admin' ? NewItemForm : LoginPage}
+                component={user?.role === 'admin' ? NewItemForm : LoginPage}
               />
 
               <PrivateRoute
                 path="/items"
-                component={user.role === 'admin' ? AdminPage : UserPage}
+                component={user?.role === 'admin' ? AdminPage : UserPage}
               />
               <PrivateRoute
                 path="/items-for-admin"
-                component={user.role === 'admin' && UserPage}
+                component={user?.role === 'admin' && UserPage}
               />
             </Switch>
           </ItemContext.Provider>
