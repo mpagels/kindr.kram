@@ -45,7 +45,7 @@ export default function Item({ data, isAdmin, index, user, saveNewItem }) {
     setInput(0)
     setSpendIsOpen(false)
   }
-  console.log(data)
+
   return (
     <ItemWrapper>
       <Carousel showThumbs={false}>

@@ -19,25 +19,9 @@ import useGetBudget from './hooks/useGetBudget'
 function App() {
   const location = useLocation()
 
-  /*  const [user, setContextUser] = useState('' *)
- /*  const [isLoggedIn, setIsLoggedIn] = useState(
-    JSON.parse(localStorage.getItem('isLoggedIn'))
-  ) */
-
   const [items, setItems] = useState()
   const { user, setUser, isLoading } = useFindUser()
   const { budget, setBudget } = useGetBudget(user, items)
-
-  console.log('user', user)
-
-  /*   fetch(`/user/${user.username}`)
-    .then((res) => res.json())
-    .then((data) => {
-      if (!data.message && data.from_location) {
-        console.log('data', data.from_location)
-        setBudet(data.from_location.budget)
-      }
-    }, [] ) */
 
   useEffect(() => {
     fetch('/item')
@@ -63,27 +47,13 @@ function App() {
               <Route path="/login">
                 <LoginPage />
               </Route>
+
               <Route exact path="/">
                 {user ? <Redirect to="/items" /> : <Redirect to="/login" />}
               </Route>
-              {/*  <Route path="/admin">
-                <Header
-                  openModal={openModal}
-                  openTransaktionsModal={openTransaktionsModal}
-                  budget={budget}
-                />
-                <AdminPage />
-              </Route> */}
-              {/* <Route path="/create-item">
-                <Header
-                  openModal={openModal}
-                  openTransaktionsModal={openTransaktionsModal}
-                  budget={budget}
-                />
-                <NewItemForm />
-              </Route> */}
 
               <PrivateRoute path="/profil" component={ProfilePage} />
+
               <PrivateRoute
                 path="/create-item"
                 component={user?.role === 'admin' ? NewItemForm : LoginPage}

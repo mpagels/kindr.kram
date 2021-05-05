@@ -4,7 +4,7 @@ import styled from 'styled-components/macro'
 import useAuth from '../hooks/useAuth'
 
 export default function LoginPage() {
-  const { loginUser, error } = useAuth()
+  const { loginUser } = useAuth()
 
   return (
     <PageWrapper>
@@ -22,13 +22,7 @@ export default function LoginPage() {
 
   async function handleLogin(event) {
     event.preventDefault()
-    console.log(event.target)
     await loginUser(event.target)
-  }
-
-  function savetoLocalStorage(token) {
-    console.log(token)
-    localStorage.setItem('token', JSON.stringify(token))
   }
 }
 

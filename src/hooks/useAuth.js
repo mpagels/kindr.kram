@@ -13,19 +13,18 @@ export default function useAuth() {
     return await axios
       .get('/auth')
       .then((res) => {
-        console.log('in setUserContext', res.data)
         setUser(res.data)
         history.push('/items')
       })
       .catch((err) => {
-        console.log(err)
+        setError(err)
       })
   }
 
   //login user
   const loginUser = async (data) => {
     const { username, password } = data
-    console.log(username, password)
+
     return axios
       .post('api/login', {
         userName: username.value,

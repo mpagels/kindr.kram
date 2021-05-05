@@ -7,7 +7,6 @@ export default function useFindTransaction() {
   const [isLoading, setLoading] = useState(true)
   const { setUser } = useContext(UserContext)
   useEffect(() => {
-    console.log('bevor axios')
     async function findTransactions() {
       await axios
         .get('/transaction')
@@ -26,7 +25,7 @@ export default function useFindTransaction() {
     }
 
     findTransactions()
-  }, [])
+  }, [setUser])
 
   return { transactions, setTransactions, isLoading }
 }
