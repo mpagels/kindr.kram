@@ -14,18 +14,19 @@ import UserPage from './pages/UserPage'
 import PrivateRoute from './components/PrivateRoute'
 import ProfilePage from './pages/ProfilePage'
 import useFindUser from './hooks/useFindUser'
+import useGetBudget from './hooks/useGetBudget'
 
 function App() {
   const location = useLocation()
-  const [budget, setBudet] = useState(0)
+
   /*  const [user, setContextUser] = useState('' *)
  /*  const [isLoggedIn, setIsLoggedIn] = useState(
     JSON.parse(localStorage.getItem('isLoggedIn'))
   ) */
 
-  const { user, setUser, isLoading } = useFindUser()
-
   const [items, setItems] = useState()
+  const { user, setUser, isLoading } = useFindUser()
+  const { budget, setBudget } = useGetBudget(user, items)
 
   console.log('user', user)
 
@@ -55,7 +56,7 @@ function App() {
 
   return (
     <Wrapper>
-      <MiscContext.Provider value={{ budget, setBudet }}>
+      <MiscContext.Provider value={{ budget, setBudget }}>
         <UserContext.Provider value={{ user, setUser, isLoading }}>
           <ItemContext.Provider value={{ items, saveNewItem }}>
             <Switch>

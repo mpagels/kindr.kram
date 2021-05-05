@@ -7,7 +7,7 @@ import getCategoryColor from '../utils/getCategoryColor'
 
 export default function ProfilePage() {
   const [error, setError] = useState('')
-  const { setBudet } = useContext(MiscContext)
+  const { setBudget } = useContext(MiscContext)
   const { user } = useContext(UserContext)
 
   const inputRef = useRef()
@@ -138,7 +138,7 @@ export default function ProfilePage() {
 
     const budgetResponse = await fetch(`/user/${user.username}`)
     const budgetData = await budgetResponse.json()
-    setBudet(budgetData.from_location.budget)
+    setBudget(budgetData.from_location.budget)
   }
 }
 
