@@ -2,25 +2,21 @@ import { useContext, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components/macro'
 import MiscContext from '../context/TestContext'
 import UserContext from '../context/UserContext'
+import useFindTransaction from '../hooks/useFindTransaction'
 import getCategoryColor from '../utils/getCategoryColor'
 
 export default function ProfilePage() {
   const [error, setError] = useState('')
   const { setBudet } = useContext(MiscContext)
-  const { user, setUser } = useContext(UserContext)
-  const [transactions, setTransactions] = useState()
+  const { user } = useContext(UserContext)
 
   const inputRef = useRef()
 
-  useEffect(() => {
-    fetch('/transaction/Toerpt')
-      .then((res) => res.json())
-      .then((data) => {
-        data.user === null
-          ? setUser(null)
-          : setTransactions(data[0].transactions)
-      })
-  }, [])
+  const { transactions, setTransactions, isLoading } = useFindTransaction()
+
+  if (isLoading) {
+    return <></>
+  }
 
   return (
     <Wrapper>
