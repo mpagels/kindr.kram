@@ -1,58 +1,33 @@
 import styled from 'styled-components/macro'
-import Header from './components/Header'
-import Modal from 'react-modal'
 import { useEffect, useState } from 'react'
 
-import { Switch, Route, useLocation } from 'react-router-dom'
+import { Switch, Route, useLocation, Redirect } from 'react-router-dom'
 import NewItemForm from './components/NewItemForm'
 import LoginPage from './pages/LoginPage'
 import AdminPage from './pages/AdminPage'
 
 import ItemContext from './context/ItemContext'
-import OwnModal from './components/OwnModal'
-import useModal from './hooks/useModal'
-import UserPage from './pages/UserPage'
+import UserContext from './context/UserContext'
+import MiscContext from './context/TestContext'
 
-Modal.setAppElement('#root')
+import UserPage from './pages/UserPage'
+import PrivateRoute from './components/PrivateRoute'
+import ProfilePage from './pages/ProfilePage'
+import useFindUser from './hooks/useFindUser'
+import useGetBudget from './hooks/useGetBudget'
 
 function App() {
   const location = useLocation()
 
-  const user = 'Anke'
-
-  const {
-    modalIsOpen,
-    setIsOpen,
-    transaktionsModalIsOpen,
-    setTransaktionsModalIsOpen,
-    error,
-    setError,
-    openModal,
-    openTransaktionsModal,
-  } = useModal()
-
-  const [budget, setBudet] = useState(0)
-  const [transactions, setTransactions] = useState()
   const [items, setItems] = useState()
+  const { user, setUser, isLoading } = useFindUser()
+  const { budget, setBudget } = useGetBudget(user, items)
 
   useEffect(() => {
     fetch('/item')
       .then((res) => res.json())
       .then((data) => setItems(data))
   }, [location])
-
-  useEffect(() => {
-    fetch(`/user/${user}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setBudet(data.from_location.budget)
-      })
-  }, [items])
-  useEffect(() => {
-    fetch('/transaction/Toerpt')
-      .then((res) => res.json())
-      .then((data) => setTransactions(data[0].transactions))
-  }, [budget, items])
 
   function saveNewItem(index, newItem) {
     const newItems = [
@@ -65,48 +40,37 @@ function App() {
 
   return (
     <Wrapper>
-      <OwnModal
-        user={user}
-        setBudet={setBudet}
-        setIsOpen={setIsOpen}
-        modalIsOpen={modalIsOpen}
-        error={error}
-        setError={setError}
-        transaktionsModalIsOpen={transaktionsModalIsOpen}
-        transactions={transactions}
-        setTransaktionsModalIsOpen={setTransaktionsModalIsOpen}
-      />
-      <ItemContext.Provider value={items}>
-        <Switch>
-          <Route path="/login">
-            <LoginPage />
-          </Route>
-          <Route exact path="/">
-            <Header
-              openModal={openModal}
-              openTransaktionsModal={openTransaktionsModal}
-              budget={budget}
-            />
-            <UserPage saveNewItem={saveNewItem} user={user} />
-          </Route>
-          <Route path="/admin">
-            <Header
-              openModal={openModal}
-              openTransaktionsModal={openTransaktionsModal}
-              budget={budget}
-            />
-            <AdminPage />
-          </Route>
-          <Route path="/create-item">
-            <Header
-              openModal={openModal}
-              openTransaktionsModal={openTransaktionsModal}
-              budget={budget}
-            />
-            <NewItemForm />
-          </Route>
-        </Switch>
-      </ItemContext.Provider>
+      <MiscContext.Provider value={{ budget, setBudget }}>
+        <UserContext.Provider value={{ user, setUser, isLoading }}>
+          <ItemContext.Provider value={{ items, saveNewItem }}>
+            <Switch>
+              <Route path="/login">
+                <LoginPage />
+              </Route>
+
+              <Route exact path="/">
+                {user ? <Redirect to="/items" /> : <Redirect to="/login" />}
+              </Route>
+
+              <PrivateRoute path="/profil" component={ProfilePage} />
+
+              <PrivateRoute
+                path="/create-item"
+                component={user?.role === 'admin' ? NewItemForm : LoginPage}
+              />
+
+              <PrivateRoute
+                path="/items"
+                component={user?.role === 'admin' ? AdminPage : UserPage}
+              />
+              <PrivateRoute
+                path="/items-for-admin"
+                component={user?.role === 'admin' && UserPage}
+              />
+            </Switch>
+          </ItemContext.Provider>
+        </UserContext.Provider>
+      </MiscContext.Provider>
     </Wrapper>
   )
 }

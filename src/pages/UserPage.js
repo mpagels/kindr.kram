@@ -1,10 +1,12 @@
 import styled from 'styled-components/macro'
 import { useContext } from 'react'
 import ItemContext from '../context/ItemContext'
+import UserContext from '../context/UserContext'
 import Item from '../components/Item'
 
-export default function UserPage({ saveNewItem, user }) {
-  const items = useContext(ItemContext)
+export default function UserPage() {
+  const { items, saveNewItem } = useContext(ItemContext)
+  const { user } = useContext(UserContext)
 
   return (
     <Main>
@@ -14,7 +16,8 @@ export default function UserPage({ saveNewItem, user }) {
             key={item.id}
             data={item}
             index={index}
-            user={user}
+            isAdmin={user.role === 'admin'}
+            user={user.username}
             saveNewItem={saveNewItem}
           />
         ))}
@@ -22,4 +25,8 @@ export default function UserPage({ saveNewItem, user }) {
   )
 }
 
-const Main = styled.main``
+const Main = styled.main`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+`

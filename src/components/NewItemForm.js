@@ -15,7 +15,6 @@ export default function NewItemForm() {
     },
     (error, result) => {
       if (!error && result && result.event === 'success') {
-        console.log(uploadedPics)
         setUploadedPics((prevUploadedPics) => {
           return [
             ...prevUploadedPics,
@@ -25,7 +24,6 @@ export default function NewItemForm() {
             },
           ]
         })
-        console.log('Done! Here is the image info: ', result.info)
       }
     }
   )
@@ -106,7 +104,6 @@ export default function NewItemForm() {
   )
 
   function createNewItem(data) {
-    console.log(data)
     const { itemName, price, description } = data
     const newItem = {
       name: itemName,
@@ -131,8 +128,6 @@ export default function NewItemForm() {
   }
 
   function handleDelete(delete_token, index) {
-    console.log(delete_token)
-    console.log(index)
     const dataString = `token=${delete_token}`
     fetch(`https://api.cloudinary.com/v1_1/martinpagels-dev/delete_by_token`, {
       method: 'POST',
@@ -143,7 +138,6 @@ export default function NewItemForm() {
     }) // *GET, POST, PUT, DELETE, etc.)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data)
         if (!data.error && data.result === 'ok') {
           setUploadedPics([
             ...uploadedPics.slice(0, index),

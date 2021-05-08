@@ -1,24 +1,28 @@
 import { ReactComponent as LoginLogo } from '../assets/svg/Login_logo.svg'
 import styled from 'styled-components/macro'
-import { useHistory } from 'react-router-dom'
+
+import useAuth from '../hooks/useAuth'
+
 export default function LoginPage() {
-  const history = useHistory()
+  const { loginUser } = useAuth()
+
   return (
     <PageWrapper>
       <Title>kindr.kram</Title>
       <LoginArea>
         <LoginLogo />
         <StyledForm onSubmit={handleLogin}>
-          <StyledInput placeholder="Username"></StyledInput>
-          <StyledInput placeholder="Passwort"></StyledInput>
-          <LoginButton>EINLOGGEN</LoginButton>
+          <StyledInput id="username" placeholder="Username"></StyledInput>
+          <StyledInput id="password" placeholder="Passwort"></StyledInput>
+          <LoginButton type="submit">EINLOGGEN</LoginButton>
         </StyledForm>
       </LoginArea>
     </PageWrapper>
   )
 
-  function handleLogin() {
-    history.push('/')
+  async function handleLogin(event) {
+    event.preventDefault()
+    await loginUser(event.target)
   }
 }
 

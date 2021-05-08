@@ -41,7 +41,7 @@ export default function OwnModal({
 
   function makeDeposit() {
     const deposit = {
-      userName: user,
+      userName: user.username,
       amount: Number(inputRef.current.value),
       category: 'deposit',
     }
@@ -64,7 +64,7 @@ export default function OwnModal({
 
   function makeWithDraw() {
     const deposit = {
-      userName: user,
+      userName: user.username,
       amount: Number(inputRef.current.value),
       category: 'withdraw',
     }
