@@ -21,7 +21,8 @@ export default function useAuth() {
       })
   }
 
-  const checkUser = async () => {
+  //set user
+  const setUserContext2 = async () => {
     return await axios
       .get('/auth')
       .then((res) => {
@@ -29,6 +30,17 @@ export default function useAuth() {
       })
       .catch((err) => {
         setError(err)
+      })
+  }
+
+  const checkUser = async () => {
+    return await axios
+      .get('/auth')
+      .then(async (res) => {
+        await setUserContext2()
+      })
+      .catch((err) => {
+        console.log(err)
       })
   }
 
@@ -53,7 +65,7 @@ export default function useAuth() {
     return axios
       .get('/logout')
       .then((res) => {
-        setUser(null)
+        setUser('')
         history.push('/login')
       })
       .catch((err) => {

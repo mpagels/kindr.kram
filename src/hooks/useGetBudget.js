@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
-export default function useFindUser(user, items) {
+export default function useGetBudget(user = '', items) {
   const [budget, setBudget] = useState(0)
 
   useEffect(() => {
@@ -18,7 +18,10 @@ export default function useFindUser(user, items) {
         })
     }
 
-    user && getBudget()
+    if (user.username) {
+      console.log('in getBudget')
+      getBudget()
+    }
   }, [user, items])
 
   return {

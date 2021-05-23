@@ -6,22 +6,19 @@ import { Redirect, Route } from 'react-router'
 import Header from './Header'
 
 export default function PrivateRoute({ component: Component, ...rest }) {
-  /* const { setContextUser, isLoggedIn, setIsLoggedIn } = useContext(UserContext) */
   const { budget } = useContext(MiscContext)
   const { user, isLoading } = useContext(UserContext)
 
-  console.log(user)
-  // function to a route, get request ( 403 or 202)
-  // await
   if (isLoading) {
     return <></>
   }
 
+  console.log('privateRoute', user)
   return (
     <Route
       {...rest}
       render={(props) =>
-        user ? (
+        user.message !== 'No authentification' ? (
           <>
             <Header budget={budget} />
             <Component {...props} user={user} />

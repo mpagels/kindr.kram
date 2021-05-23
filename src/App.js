@@ -21,6 +21,7 @@ function App() {
 
   const [items, setItems] = useState()
   const { user, setUser, isLoading } = useFindUser()
+  console.log('app user', user)
   const { budget, setBudget } = useGetBudget(user, items)
 
   useEffect(() => {
