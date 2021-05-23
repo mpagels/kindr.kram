@@ -10,25 +10,26 @@ export default function PrivateRoute({ component: Component, ...rest }) {
   const { budget } = useContext(MiscContext)
   const { user, isLoading } = useContext(UserContext)
 
+  console.log(user)
   // function to a route, get request ( 403 or 202)
   // await
   if (isLoading) {
     return <></>
   }
 
-  if (user) {
-    return (
-      <Route
-        {...rest}
-        render={(props) => (
+  return (
+    <Route
+      {...rest}
+      render={(props) =>
+        user ? (
           <>
             <Header budget={budget} />
             <Component {...props} user={user} />
           </>
-        )}
-      />
-    )
-  } else {
-    return <Redirect to="/login" />
-  }
+        ) : (
+          <Redirect to="/login" />
+        )
+      }
+    />
+  )
 }
