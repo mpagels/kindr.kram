@@ -5,7 +5,7 @@ import UserContext from '../context/UserContext'
 
 export default function useAuth() {
   let history = useHistory()
-  const { setUser } = useContext(UserContext)
+  const { setUser, setLoading } = useContext(UserContext)
   const [error, setError] = useState(null)
 
   //set user
@@ -27,13 +27,16 @@ export default function useAuth() {
       .get('/auth')
       .then((res) => {
         setUser(res.data)
+        setLoading(false)
       })
       .catch((err) => {
         setError(err)
+        setLoading(false)
       })
   }
 
   const checkUser = async () => {
+    setLoading(true)
     return await axios
       .get('/auth')
       .then(async (res) => {
@@ -41,6 +44,7 @@ export default function useAuth() {
       })
       .catch((err) => {
         console.log(err)
+        setLoading(false)
       })
   }
 

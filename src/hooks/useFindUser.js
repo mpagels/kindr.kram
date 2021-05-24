@@ -5,6 +5,7 @@ export default function useFindUser() {
   const [user, setUser] = useState('')
   const [isLoading, setLoading] = useState(true)
 
+  console.log('in useFindUser')
   useEffect(() => {
     async function findUser() {
       await axios
@@ -36,5 +37,6 @@ export default function useFindUser() {
     user,
     setUser,
     isLoading,
+    setLoading,
   }
 }
