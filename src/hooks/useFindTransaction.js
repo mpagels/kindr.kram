@@ -19,7 +19,7 @@ export default function useFindTransaction() {
           }
         })
         .catch((err) => {
-          //console.log(err);
+          console.log(err)
           setLoading(false)
         })
     }

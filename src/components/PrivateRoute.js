@@ -15,7 +15,6 @@ export default function PrivateRoute({ component: Component, ...rest }) {
     return <></>
   }
 
-  console.log('privateRoute', user.user === null)
   checkAuth()
   return (
     <Route
