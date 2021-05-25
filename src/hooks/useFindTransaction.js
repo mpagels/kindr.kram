@@ -11,8 +11,8 @@ export default function useFindTransaction() {
       await axios
         .get('/transaction')
         .then((data) => {
-          if (data.data.user === null) {
-            setUser(null)
+          if (data.data.message === 'No authentification') {
+            setUser(data.data)
           } else {
             setTransactions(data.data.transactions[0].transactions)
             setLoading(false)
