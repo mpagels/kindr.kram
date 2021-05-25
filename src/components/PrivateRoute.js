@@ -4,17 +4,19 @@ import MiscContext from '../context/TestContext'
 
 import { Redirect, Route } from 'react-router'
 import Header from './Header'
-import useFindTransaction from '../hooks/useFindTransaction'
+import useAuth from '../hooks/useAuth'
 
 export default function PrivateRoute({ component: Component, ...rest }) {
   const { budget } = useContext(MiscContext)
   const { user, isLoading } = useContext(UserContext)
-  const { transactions, setTransactions, isLoading2 } = useFindTransaction()
+  const { checkAuth } = useAuth()
+
   if (isLoading) {
     return <></>
   }
 
   console.log('privateRoute', user.user === null)
+  checkAuth()
   return (
     <Route
       {...rest}

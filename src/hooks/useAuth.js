@@ -28,17 +28,15 @@ export default function useAuth() {
     return await axios
       .get('/auth')
       .then((res) => {
-        setUser(res.data)
-        setLoading(false)
+        if (res.data.message === 'No authentification') {
+          setUser('')
+          history.push('/login')
+        }
       })
-      .catch((err) => {
-        setError(err)
-        setLoading(false)
-      })
+      .catch((err) => {})
   }
 
-  const checkUser = async () => {
-    setLoading(true)
+  const checkAuth = async () => {
     return await axios
       .get('/auth')
       .then(async (res) => {
@@ -46,7 +44,6 @@ export default function useAuth() {
       })
       .catch((err) => {
         console.log(err)
-        setLoading(false)
       })
   }
 
@@ -82,7 +79,7 @@ export default function useAuth() {
   return {
     loginUser,
     logoutUser,
-    checkUser,
+    checkAuth,
     error,
   }
 }
