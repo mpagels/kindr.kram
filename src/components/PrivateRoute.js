@@ -4,31 +4,31 @@ import MiscContext from '../context/TestContext'
 
 import { Redirect, Route } from 'react-router'
 import Header from './Header'
+import useAuth from '../hooks/useAuth'
 
 export default function PrivateRoute({ component: Component, ...rest }) {
-  /* const { setContextUser, isLoggedIn, setIsLoggedIn } = useContext(UserContext) */
   const { budget } = useContext(MiscContext)
   const { user, isLoading } = useContext(UserContext)
+  const { checkAuth } = useAuth()
 
-  // function to a route, get request ( 403 or 202)
-  // await
   if (isLoading) {
     return <></>
   }
 
-  if (user) {
-    return (
-      <Route
-        {...rest}
-        render={(props) => (
+  checkAuth()
+  return (
+    <Route
+      {...rest}
+      render={(props) =>
+        !(user.message === 'No authentification' || user.user === null) ? (
           <>
             <Header budget={budget} />
             <Component {...props} user={user} />
           </>
-        )}
-      />
-    )
-  } else {
-    return <Redirect to="/login" />
-  }
+        ) : (
+          <Redirect to="/login" />
+        )
+      }
+    />
+  )
 }

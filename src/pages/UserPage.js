@@ -13,7 +13,7 @@ export default function UserPage() {
       {items &&
         items.map((item, index) => (
           <Item
-            key={item.id}
+            key={`${item.id}_${index}`}
             data={item}
             index={index}
             isAdmin={user.role === 'admin'}

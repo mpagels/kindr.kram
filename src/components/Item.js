@@ -50,11 +50,9 @@ export default function Item({ data, isAdmin, index, user, saveNewItem }) {
     <ItemWrapper>
       <Carousel showThumbs={false}>
         {image_urls.map((url, index) => (
-          <Image
-            cloudName="martinpagels-dev"
-            publicId={url}
-            key={`${url}_${index}`}
-          />
+          <div key={url}>
+            <Image cloudName="martinpagels-dev" publicId={url} key={url} />
+          </div>
         ))}
       </Carousel>
       <PriceWrapper>

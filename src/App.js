@@ -20,7 +20,7 @@ function App() {
   const location = useLocation()
 
   const [items, setItems] = useState()
-  const { user, setUser, isLoading } = useFindUser()
+  const { user, setUser, isLoading, setLoading } = useFindUser()
   const { budget, setBudget } = useGetBudget(user, items)
 
   useEffect(() => {
@@ -41,7 +41,7 @@ function App() {
   return (
     <Wrapper>
       <MiscContext.Provider value={{ budget, setBudget }}>
-        <UserContext.Provider value={{ user, setUser, isLoading }}>
+        <UserContext.Provider value={{ user, setUser, isLoading, setLoading }}>
           <ItemContext.Provider value={{ items, saveNewItem }}>
             <Switch>
               <Route path="/login">

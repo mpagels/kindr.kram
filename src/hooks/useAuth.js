@@ -21,6 +21,30 @@ export default function useAuth() {
       })
   }
 
+  //set user
+  const setUserContext2 = async () => {
+    return await axios
+      .get('/auth')
+      .then((res) => {
+        if (res.data.message === 'No authentification') {
+          setUser('')
+          history.push('/login')
+        }
+      })
+      .catch((err) => {})
+  }
+
+  const checkAuth = async () => {
+    return await axios
+      .get('/auth')
+      .then(async (res) => {
+        await setUserContext2()
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
   //login user
   const loginUser = async (data) => {
     const { username, password } = data
@@ -37,9 +61,23 @@ export default function useAuth() {
         console.log(err)
       })
   }
+  //logout user
+  const logoutUser = async () => {
+    return axios
+      .get('/logout')
+      .then((res) => {
+        setUser('')
+        history.push('/login')
+      })
+      .catch((err) => {
+        setError(err)
+      })
+  }
 
   return {
     loginUser,
+    logoutUser,
+    checkAuth,
     error,
   }
 }
