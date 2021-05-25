@@ -18,57 +18,60 @@ export default function ProfilePage() {
   if (isLoading) {
     return <></>
   }
-
   return (
     <Wrapper>
       Hallo {user.username}
       <button onClick={logoutUser}>Logout</button>
-      Banking
-      <TransactionInput
-        name="budget"
-        ref={inputRef}
-        type="number"
-        required
-        min={1}
-      />
-      {error && <TransactionError>{error}</TransactionError>}
-      <KontoButtonWrapper>
-        <DepositButton onClick={makeDeposit}>Einzahlen</DepositButton>
-        <WithDrawButton onClick={makeWithDraw}>Auszahlen</WithDrawButton>
-      </KontoButtonWrapper>
-      <TransactionList>
-        {transactions &&
-          transactions
-            .map((transaction) =>
-              transaction.category === 'donation' ? (
-                <TransaktionItem key={transaction._id}>
-                  {`${transaction.from.name} hat am ${convertTime(
-                    transaction.performed_at
-                  )}`}
-                  <Amount category={transaction.category}>
-                    {` ${transaction.amount}€ `}
-                  </Amount>
-                  für <strong>{transaction.for_item.name} </strong>
-                  gespendet.
-                </TransaktionItem>
-              ) : (
-                <TransaktionItem key={transaction._id}>
-                  {`${transaction.from.name} hat am ${convertTime(
-                    transaction.performed_at
-                  )}`}
-                  <Amount category={transaction.category}>
-                    {` ${transaction.amount}€ `}
-                  </Amount>
-                  {`${
-                    transaction.category === 'deposit'
-                      ? 'eingezahlt'
-                      : 'abgehoben'
-                  }.`}
-                </TransaktionItem>
-              )
-            )
-            .reverse()}
-      </TransactionList>
+      {user.role !== 'admin' && (
+        <>
+          Banking
+          <TransactionInput
+            name="budget"
+            ref={inputRef}
+            type="number"
+            required
+            min={1}
+          />
+          {error && <TransactionError>{error}</TransactionError>}
+          <KontoButtonWrapper>
+            <DepositButton onClick={makeDeposit}>Einzahlen</DepositButton>
+            <WithDrawButton onClick={makeWithDraw}>Auszahlen</WithDrawButton>
+          </KontoButtonWrapper>
+          <TransactionList>
+            {transactions &&
+              transactions
+                .map((transaction) =>
+                  transaction.category === 'donation' ? (
+                    <TransaktionItem key={transaction._id}>
+                      {`${transaction.from.name} hat am ${convertTime(
+                        transaction.performed_at
+                      )}`}
+                      <Amount category={transaction.category}>
+                        {` ${transaction.amount}€ `}
+                      </Amount>
+                      für <strong>{transaction.for_item.name} </strong>
+                      gespendet.
+                    </TransaktionItem>
+                  ) : (
+                    <TransaktionItem key={transaction._id}>
+                      {`${transaction.from.name} hat am ${convertTime(
+                        transaction.performed_at
+                      )}`}
+                      <Amount category={transaction.category}>
+                        {` ${transaction.amount}€ `}
+                      </Amount>
+                      {`${
+                        transaction.category === 'deposit'
+                          ? 'eingezahlt'
+                          : 'abgehoben'
+                      }.`}
+                    </TransaktionItem>
+                  )
+                )
+                .reverse()}
+          </TransactionList>
+        </>
+      )}
     </Wrapper>
   )
 
