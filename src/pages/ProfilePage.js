@@ -177,7 +177,7 @@ const WithDrawButton = styled(DepositButton)`
 
 const TransactionList = styled.ul`
   list-style-type: none;
-  padding: 0;
+  padding: 15px;
 `
 const TransaktionItem = styled.li`
   font-size: 0.8em;
