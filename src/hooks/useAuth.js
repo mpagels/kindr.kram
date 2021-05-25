@@ -13,8 +13,6 @@ export default function useAuth() {
     return await axios
       .get('/auth')
       .then((res) => {
-        console.log('in setUsercontext')
-        console.log(res.data)
         setUser(res.data)
         history.push('/items')
       })
