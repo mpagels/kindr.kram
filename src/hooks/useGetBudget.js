@@ -19,7 +19,6 @@ export default function useGetBudget(user = '', items) {
     }
 
     if (user.username) {
-      console.log('in getBudget')
       getBudget()
     }
   }, [user, items])
