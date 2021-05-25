@@ -5,7 +5,7 @@ import UserContext from '../context/UserContext'
 
 export default function useAuth() {
   let history = useHistory()
-  const { setUser, setLoading } = useContext(UserContext)
+  const { setUser } = useContext(UserContext)
   const [error, setError] = useState(null)
 
   //set user
