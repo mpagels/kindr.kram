@@ -166,7 +166,7 @@ const WantSpendButton = styled.button`
   justify-content: center;
   align-items: center;
   padding: 15px;
-  cursor: pointer;
+  ${(props) => !props.disabled && 'cursor: pointer'};
   border-radius: 15px;
   background-color: ${(props) => (props.disabled ? 'lightgrey' : '#83c5be')};
   color: black;
