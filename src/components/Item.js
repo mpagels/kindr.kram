@@ -19,7 +19,7 @@ export default function Item({ data, isAdmin, index, user, saveNewItem }) {
       category: 'donation',
       item_id: _id,
     }
-    fetch('/transaction/donate', {
+    fetch('/api/transaction/donate', {
       method: 'POST',
       body: JSON.stringify(donation),
       headers: {

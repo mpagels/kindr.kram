@@ -24,7 +24,7 @@ function App() {
   const { budget, setBudget } = useGetBudget(user, items)
 
   useEffect(() => {
-    fetch('/item')
+    fetch('/api/item')
       .then((res) => res.json())
       .then((data) => setItems(data))
   }, [location])

@@ -11,7 +11,7 @@ export default function useAuth() {
   //set user
   const setUserContext = async () => {
     return await axios
-      .get('/auth')
+      .get('/api/auth')
       .then((res) => {
         setUser(res.data)
         history.push('/items')
@@ -24,7 +24,7 @@ export default function useAuth() {
   //set user
   const setUserContext2 = async () => {
     return await axios
-      .get('/auth')
+      .get('/api/auth')
       .then((res) => {
         if (res.data.message === 'No authentification') {
           setUser('')
@@ -36,7 +36,7 @@ export default function useAuth() {
 
   const checkAuth = async () => {
     return await axios
-      .get('/auth')
+      .get('/api/auth')
       .then(async (res) => {
         await setUserContext2()
       })
@@ -50,7 +50,7 @@ export default function useAuth() {
     const { username, password } = data
 
     return axios
-      .post('api/login', {
+      .post('/api/login', {
         userName: username.value,
         password: password.value,
       })
@@ -64,7 +64,7 @@ export default function useAuth() {
   //logout user
   const logoutUser = async () => {
     return axios
-      .get('/logout')
+      .get('/api/logout')
       .then((res) => {
         setUser('')
         history.push('/login')

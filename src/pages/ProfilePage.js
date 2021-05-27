@@ -12,7 +12,7 @@ export default function ProfilePage() {
   const { user } = useContext(UserContext)
   const { logoutUser } = useAuth()
   const inputRef = useRef()
-
+  const [input, setInput] = useState('')
   const { transactions, setTransactions, isLoading } = useFindTransaction()
 
   if (isLoading) {
@@ -78,11 +78,11 @@ export default function ProfilePage() {
   async function makeDeposit() {
     const deposit = {
       userName: user.username,
-      amount: Number(inputRef.current.value),
+      amount: Number(inputRef.current.value).toFixed(2),
       category: 'deposit',
     }
 
-    const depositResponse = await fetch('/transaction/deposit', {
+    const depositResponse = await fetch('/api/transaction/deposit', {
       method: 'POST',
       body: JSON.stringify(deposit),
       headers: {
@@ -106,7 +106,7 @@ export default function ProfilePage() {
       amount: Number(inputRef.current.value),
       category: 'withdraw',
     }
-    const withDrawResponse = await fetch('/transaction/withdraw', {
+    const withDrawResponse = await fetch('/api/transaction/withdraw', {
       method: 'POST',
       body: JSON.stringify(withdraw),
       headers: {
@@ -136,11 +136,11 @@ export default function ProfilePage() {
   }
 
   async function getTransactionsAndSetBudget() {
-    const transactionRespone = await fetch('/transaction/Toerpt')
+    const transactionRespone = await fetch('/api/transaction/Toerpt')
     const transactionsData = await transactionRespone.json()
     setTransactions(transactionsData[0].transactions)
 
-    const budgetResponse = await fetch(`/user/${user.username}`)
+    const budgetResponse = await fetch(`/api/user/${user.username}`)
     const budgetData = await budgetResponse.json()
     setBudget(budgetData.from_location.budget)
   }
