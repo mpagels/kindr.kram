@@ -78,7 +78,7 @@ export default function ProfilePage() {
   async function makeDeposit() {
     const deposit = {
       userName: user.username,
-      amount: Number(inputRef.current.value).toFixed(2),
+      amount: Number(inputRef.current.value),
       category: 'deposit',
     }
 
