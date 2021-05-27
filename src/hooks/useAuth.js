@@ -48,14 +48,27 @@ export default function useAuth() {
   //login user
   const loginUser = async (data) => {
     const { username, password } = data
-
-    return axios
-      .post('/api/login', {
-        userName: username.value,
-        password: password.value,
-      })
-      .then(async () => {
-        await setUserContext()
+    console.log('username', username.value)
+    console.log('password', password.value)
+    axios
+      .post(
+        '/api/login',
+        {
+          userName: username.value,
+          password: password.value,
+        },
+        {
+          validateStatus: function (status) {
+            return status < 500 // Resolve only if the status code is less than 500
+          },
+        }
+      )
+      .then(async (data) => {
+        if (data.status === 200) {
+          await setUserContext()
+        } else {
+          console.log(data.data.message)
+        }
       })
       .catch((err) => {
         console.log(err)
