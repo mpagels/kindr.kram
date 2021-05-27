@@ -1,11 +1,22 @@
 import { ReactComponent as LoginLogo } from '../assets/svg/Login_logo.svg'
 import styled from 'styled-components/macro'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 import useAuth from '../hooks/useAuth'
 
 export default function LoginPage() {
-  const { loginUser } = useAuth()
-
+  const notify = () =>
+    toast.error('Username oder Passwort falsch.', {
+      position: 'top-center',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    })
+  const { loginUser } = useAuth(notify)
   return (
     <PageWrapper>
       <Title>kindr.kram</Title>
@@ -16,6 +27,7 @@ export default function LoginPage() {
           <StyledInput id="password" placeholder="Passwort"></StyledInput>
           <LoginButton type="submit">EINLOGGEN</LoginButton>
         </StyledForm>
+        <ToastContainer />
       </LoginArea>
     </PageWrapper>
   )
@@ -49,6 +61,10 @@ const LoginArea = styled.section`
   align-items: center;
   height: calc(100vh - 105px);
   padding-top: 50px;
+
+  & .Toastify__toast--error {
+    background-color: #ad382b;
+  }
 
   @media (min-width: 1024px) {
     flex-direction: row;

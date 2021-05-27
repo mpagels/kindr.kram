@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 import axios from 'axios'
 import UserContext from '../context/UserContext'
 
-export default function useAuth() {
+export default function useAuth(notify) {
   let history = useHistory()
   const { setUser } = useContext(UserContext)
   const [error, setError] = useState(null)
@@ -67,7 +67,7 @@ export default function useAuth() {
         if (data.status === 200) {
           await setUserContext()
         } else {
-          console.log(data.data.message)
+          notify()
         }
       })
       .catch((err) => {
