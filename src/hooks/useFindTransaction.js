@@ -9,7 +9,7 @@ export default function useFindTransaction() {
   useEffect(() => {
     async function findTransactions() {
       await axios
-        .get('/transaction')
+        .get('/api/transaction')
         .then((data) => {
           if (data.data.message === 'No authentification') {
             setUser(data.data)

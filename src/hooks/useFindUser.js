@@ -7,7 +7,7 @@ export default function useFindUser() {
   useEffect(() => {
     async function findUser() {
       await axios
-        .get('/auth')
+        .get('/api/auth')
         .then((res) => {
           if (
             res.data.message !== 'No authentification' ||

@@ -7,7 +7,7 @@ export default function useGetBudget(user = '', items) {
   useEffect(() => {
     async function getBudget() {
       await axios
-        .get(`/user/${user.username}`)
+        .get(`/api/user/${user.username}`)
         .then((data) => {
           if (!data.data.message && data.data.from_location) {
             setBudget(data.data.from_location.budget)
