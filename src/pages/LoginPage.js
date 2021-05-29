@@ -24,7 +24,11 @@ export default function LoginPage() {
         <LoginLogo />
         <StyledForm onSubmit={handleLogin}>
           <StyledInput id="username" placeholder="Username"></StyledInput>
-          <StyledInput id="password" placeholder="Passwort"></StyledInput>
+          <StyledInput
+            id="password"
+            type="password"
+            placeholder="Passwort"
+          ></StyledInput>
           <LoginButton type="submit">EINLOGGEN</LoginButton>
         </StyledForm>
         <ToastContainer />
