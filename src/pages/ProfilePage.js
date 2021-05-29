@@ -12,7 +12,6 @@ export default function ProfilePage() {
   const { user } = useContext(UserContext)
   const { logoutUser } = useAuth()
   const inputRef = useRef()
-  const [input, setInput] = useState('')
   const { transactions, setTransactions, isLoading } = useFindTransaction()
 
   if (isLoading) {

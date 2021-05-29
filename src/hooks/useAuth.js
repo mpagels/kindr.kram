@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 import axios from 'axios'
 import UserContext from '../context/UserContext'
 
-export default function useAuth() {
+export default function useAuth(notify) {
   let history = useHistory()
   const { setUser } = useContext(UserContext)
   const [error, setError] = useState(null)
@@ -48,14 +48,27 @@ export default function useAuth() {
   //login user
   const loginUser = async (data) => {
     const { username, password } = data
-
-    return axios
-      .post('/api/login', {
-        userName: username.value,
-        password: password.value,
-      })
-      .then(async () => {
-        await setUserContext()
+    console.log('username', username.value)
+    console.log('password', password.value)
+    axios
+      .post(
+        '/api/login',
+        {
+          userName: username.value,
+          password: password.value,
+        },
+        {
+          validateStatus: function (status) {
+            return status < 500 // Resolve only if the status code is less than 500
+          },
+        }
+      )
+      .then(async (data) => {
+        if (data.status === 200) {
+          await setUserContext()
+        } else {
+          notify()
+        }
       })
       .catch((err) => {
         console.log(err)

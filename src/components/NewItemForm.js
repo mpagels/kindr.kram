@@ -111,7 +111,7 @@ export default function NewItemForm() {
       description,
       image_urls: uploadedPics.map((image) => image.public_id),
     }
-    fetch('/item/create', {
+    fetch('/api/item/create', {
       method: 'POST',
       body: JSON.stringify(newItem),
       headers: {
