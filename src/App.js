@@ -29,11 +29,13 @@ function App() {
       .then((data) => setItems(data))
   }, [location])
 
-  function saveNewItem(index, newItem) {
+  function saveNewItem(itemId, newItem) {
+    const indexOfItem = items.findIndex((item) => item._id === itemId)
+
     const newItems = [
-      ...items.slice(0, index),
+      ...items.slice(0, indexOfItem),
       newItem,
-      ...items.slice(index + 1),
+      ...items.slice(indexOfItem + 1),
     ]
     setItems(newItems)
   }
