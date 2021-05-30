@@ -3,15 +3,18 @@ import { useContext } from 'react'
 import ItemContext from '../context/ItemContext'
 import UserContext from '../context/UserContext'
 import Item from '../components/Item'
+import getOrderedItemList from '../utils/getOrderedItemList'
 
 export default function UserPage() {
   const { items, saveNewItem } = useContext(ItemContext)
   const { user } = useContext(UserContext)
 
+  const itemsToRender = getOrderedItemList(items)
+
   return (
     <Main>
       {items &&
-        items.map((item, index) => (
+        itemsToRender.map((item, index) => (
           <Item
             key={`${item.id}_${index}`}
             data={item}

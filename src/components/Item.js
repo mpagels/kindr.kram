@@ -33,7 +33,8 @@ export default function Item({ data, isAdmin, index, user, saveNewItem }) {
           setErrorMessage(data.message)
           setIsError(true)
         } else {
-          saveNewItem(index, data)
+          saveNewItem(_id, data)
+          setInput(0)
           setErrorMessage()
           setIsError(false)
           setSpendIsOpen(false)
