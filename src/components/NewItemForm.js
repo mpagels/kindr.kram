@@ -36,7 +36,7 @@ export default function NewItemForm() {
   } = useForm()
   return (
     <FormWrapper>
-      <form onSubmit={handleSubmit(createNewItem)}>
+      <StyledForm onSubmit={handleSubmit(createNewItem)}>
         {/* register your input into the hook by invoking the "register" function */}
         <StyledLabel for="itemName">Itemname:</StyledLabel>
         <StyledInput
@@ -99,7 +99,7 @@ export default function NewItemForm() {
         </PictureUploadWrapper>
 
         <StyledSendButton>Item speichern</StyledSendButton>
-      </form>
+      </StyledForm>
     </FormWrapper>
   )
 
@@ -148,6 +148,11 @@ export default function NewItemForm() {
   }
 }
 
+const StyledForm = styled.form`
+  display: flex;
+  flex-direction: column;
+`
+
 const StyledLabel = styled.label`
   display: block;
   padding-bottom: 10px;
@@ -182,7 +187,6 @@ const StyledSendButton = styled.button`
   text-align: center;
   border-radius: 10px;
   padding: 10px;
-  position: absolute;
   bottom: 20px;
   left: 30px;
   right: -30px;
