@@ -4,6 +4,7 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css'
 import { Carousel } from 'react-responsive-carousel'
 import { Image } from 'cloudinary-react'
 import useItem from '../hooks/useItem'
+import SpendArea from './SpendArea'
 
 export default function Item({ data, isAdmin, index, user, saveNewItem }) {
   const { description, donations, image_urls, name, price, _id } = data || {}
@@ -51,60 +52,34 @@ export default function Item({ data, isAdmin, index, user, saveNewItem }) {
         width={'100%'}
       />
       {spendIsOpen && (
-        <div>
-          <SpendWrapper>
-            <SpendInput
-              type="number"
-              min="0"
-              value={input}
-              onChange={(e) => setInput(Number(e.target.value))}
-            />
-            <SpendButton onClick={handleDonationClick}>Spenden</SpendButton>
-          </SpendWrapper>
-          {isError && (
-            <ErrorMessage>
-              {errorMessage}
-              <RemoveErrorButton onClick={() => setIsError(false)}>
-                ❌
-              </RemoveErrorButton>
-            </ErrorMessage>
-          )}
-        </div>
+        <SpendArea
+          input={input}
+          handleInput={setInput}
+          handleDonationClick={handleDonationClick}
+          isError={isError}
+          errorMessage={errorMessage}
+          handleError={setIsError}
+        />
       )}
       {spendIsOpen ? (
         <Abortbutton onClick={handleAbortSpendClick}>Abbrechen</Abortbutton>
-      ) : !isAdmin ? (
-        <WantSpendButton
-          disabled={donationVolumne === price}
-          onClick={() => setSpendIsOpen(true)}
-        >
-          Spenden
-        </WantSpendButton>
       ) : (
-        ''
+        !isAdmin && (
+          <WantSpendButton
+            disabled={donationVolumne === price}
+            onClick={() => setSpendIsOpen(true)}
+          >
+            Spenden
+          </WantSpendButton>
+        )
       )}
     </ItemWrapper>
   )
 }
-const RemoveErrorButton = styled.button`
-  all: unset;
-  cursor: pointer;
-`
+
 const PriceWrapper = styled.div`
   display: flex;
   flex-direction: column;
-`
-
-const ErrorMessage = styled.p`
-  color: red;
-  font-size: 0.7em;
-  text-align: center;
-`
-const SpendWrapper = styled.div`
-  margin: 15px;
-  display: flex;
-  justify-content: center;
-  gap: 20px;
 `
 
 const InfoOnDonation = styled.div`
@@ -118,16 +93,7 @@ const InfoOnDonation = styled.div`
     font-weight: bold;
   }
 `
-const SpendInput = styled.input`
-  height: 50px;
-  width: 120px;
-  font-size: 1.3em;
-  color: grey;
-  text-align: center;
-  -moz-appearance: textfield;
-  border-radius: 10px;
-  border: solid 1px lightgrey;
-`
+
 const ItemWrapper = styled.section`
   display: flex;
   flex-direction: column;
@@ -142,13 +108,6 @@ const ItemWrapper = styled.section`
     0 14px 80px rgba(0, 0, 0, 0.07);
 `
 
-const SpendButton = styled.button`
-  all: unset;
-  cursor: pointer;
-  background-color: #83c5be;
-  padding: 10px;
-  border-radius: 10px;
-`
 const WantSpendButton = styled.button`
   all: unset;
   display: flex;
