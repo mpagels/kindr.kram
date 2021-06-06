@@ -127,12 +127,6 @@ const Abortbutton = styled(WantSpendButton)`
   color: white;
 `
 
-/* const Image = styled.img`
-  margin: 10px 0;
-  width: 100%;
-  border-radius: 5px;
-` */
-
 const PriceTag = styled.p`
   display: flex;
   justify-content: center;
