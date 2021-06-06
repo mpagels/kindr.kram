@@ -51,19 +51,16 @@ export default function Item({ data, isAdmin, index, user, saveNewItem }) {
           isError={isError}
           errorMessage={errorMessage}
           handleError={setIsError}
+          handleAbortSpendClick={handleAbortSpendClick}
         />
       )}
-      {spendIsOpen ? (
-        <Abortbutton onClick={handleAbortSpendClick}>Abbrechen</Abortbutton>
-      ) : (
-        !isAdmin && (
-          <WantSpendButton
-            disabled={donationVolumne === price}
-            onClick={() => setSpendIsOpen(true)}
-          >
-            Spenden
-          </WantSpendButton>
-        )
+      {!spendIsOpen && !isAdmin && (
+        <WantSpendButton
+          disabled={donationVolumne === price}
+          onClick={() => setSpendIsOpen(true)}
+        >
+          Spenden
+        </WantSpendButton>
       )}
     </ItemWrapper>
   )
@@ -95,11 +92,6 @@ const WantSpendButton = styled.button`
   color: black;
   font-weight: bold;
   margin: 10px 0;
-`
-
-const Abortbutton = styled(WantSpendButton)`
-  background-color: #e07a5f;
-  color: white;
 `
 
 const Description = styled.p`

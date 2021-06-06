@@ -7,27 +7,31 @@ export default function SpendArea({
   isError,
   errorMessage,
   handleError,
+  handleAbortSpendClick,
 }) {
   return (
-    <div>
-      <SpendWrapper>
-        <SpendInput
-          type="number"
-          min="0"
-          value={input}
-          onChange={(e) => handleInput(Number(e.target.value))}
-        />
-        <SpendButton onClick={handleDonationClick}>Spenden</SpendButton>
-      </SpendWrapper>
-      {isError && (
-        <ErrorMessage>
-          {errorMessage}
-          <RemoveErrorButton onClick={() => handleError(false)}>
-            ❌
-          </RemoveErrorButton>
-        </ErrorMessage>
-      )}
-    </div>
+    <>
+      <div>
+        <SpendWrapper>
+          <SpendInput
+            type="number"
+            min="0"
+            value={input}
+            onChange={(e) => handleInput(Number(e.target.value))}
+          />
+          <SpendButton onClick={handleDonationClick}>Spenden</SpendButton>
+        </SpendWrapper>
+        {isError && (
+          <ErrorMessage>
+            {errorMessage}
+            <RemoveErrorButton onClick={() => handleError(false)}>
+              ❌
+            </RemoveErrorButton>
+          </ErrorMessage>
+        )}
+      </div>
+      <Abortbutton onClick={handleAbortSpendClick}>Abbrechen</Abortbutton>
+    </>
   )
 }
 
@@ -65,4 +69,17 @@ const SpendButton = styled.button`
   background-color: #83c5be;
   padding: 10px;
   border-radius: 10px;
+`
+const Abortbutton = styled.button`
+  all: unset;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  border-radius: 15px;
+  font-weight: bold;
+  margin: 10px 0;
+  background-color: #e07a5f;
+  color: white;
 `
