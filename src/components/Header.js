@@ -1,60 +1,19 @@
 import styled from 'styled-components'
-import { Link, useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
 import { ReactComponent as AccountLogo } from '../assets/svg/account_2.svg'
 import { ReactComponent as SavingLogo } from '../assets/svg/savings.svg'
-import { ReactComponent as AddLogo } from '../assets/svg/add.svg'
 import { ReactComponent as ListLogo } from '../assets/svg/list.svg'
-import { ReactComponent as CancelLogo } from '../assets/svg/cancel.svg'
 import { ReactComponent as AdminLogo } from '../assets/svg/admin-panel.svg'
 import { useContext } from 'react'
 import UserContext from '../context/UserContext'
+import CreateButton from './CreateButton'
+import AdminButton from './AdminButton'
 
 export default function Header({ budget }) {
   const { pathname } = useLocation()
-  const history = useHistory()
 
   const { user } = useContext(UserContext)
-
-  const createButton = () => {
-    if (user.role === 'admin') {
-      if (pathname === '/create-item') {
-        return (
-          <CancelLogo
-            style={{ fill: '#e07a5f', cursor: 'pointer' }}
-            onClick={() => history.goBack()}
-          />
-        )
-      } else {
-        return (
-          <Link to="/create-item">
-            <AddLogo style={{ fill: '#457b9d' }} />
-          </Link>
-        )
-      }
-    } else {
-      return ''
-    }
-  }
-  const adminButton = () => {
-    if (user.role === 'admin') {
-      if (pathname === '/items-for-admin') {
-        return (
-          <Link to="/items">
-            <AdminLogo style={{ fill: '#457b9d', cursor: 'pointer' }} />
-          </Link>
-        )
-      } else {
-        return (
-          <Link to="/items-for-admin">
-            <ListLogo style={{ fill: '#457b9d' }} />
-          </Link>
-        )
-      }
-    } else {
-      return ''
-    }
-  }
 
   return (
     <HeaderWrapper>
@@ -71,9 +30,9 @@ export default function Header({ budget }) {
           <ListButton />
         </Link>
       )}
-      {createButton()}
+      {user.role === 'admin' && <CreateButton pathname={pathname} />}
       {user.role === 'admin' ? (
-        adminButton()
+        <AdminButton pathname={pathname} />
       ) : (
         <ButtonWrapper>
           <Budget>
