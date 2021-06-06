@@ -27,12 +27,7 @@ export default function Item({ data, isAdmin, index, user, saveNewItem }) {
     <ItemWrapper>
       <Carousel showThumbs={false}>
         {image_urls.map((url, index) => (
-          <Image
-            key={url}
-            cloudName="martinpagels-dev"
-            publicId={url}
-            key={url}
-          />
+          <Image key={url} cloudName="martinpagels-dev" publicId={url} />
         ))}
       </Carousel>
       <PriceDisplay donationVolumne={donationVolumne} price={price} />
