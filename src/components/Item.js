@@ -1,51 +1,25 @@
 import ProgressBar from 'react-percent-bar'
 import styled from 'styled-components'
-import { useState } from 'react'
-import 'react-responsive-carousel/lib/styles/carousel.min.css' // requires a loader
+import 'react-responsive-carousel/lib/styles/carousel.min.css'
 import { Carousel } from 'react-responsive-carousel'
 import { Image } from 'cloudinary-react'
+import useItem from '../hooks/useItem'
+
 export default function Item({ data, isAdmin, index, user, saveNewItem }) {
-  const [spendIsOpen, setSpendIsOpen] = useState(false)
-  const [input, setInput] = useState('')
-  const [isError, setIsError] = useState(false)
-  const [errorMessage, setErrorMessage] = useState()
   const { description, donations, image_urls, name, price, _id } = data || {}
-  const donationVolumne = donations.reduce((pre, cur) => pre + cur.amount, 0)
 
-  function handleDonationClick() {
-    const donation = {
-      userName: user,
-      amount: Number(input),
-      category: 'donation',
-      item_id: _id,
-    }
-    fetch('/api/transaction/donate', {
-      method: 'POST',
-      body: JSON.stringify(donation),
-      headers: {
-        'Content-Type': 'application/json',
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.status === 'error') {
-          setErrorMessage(data.message)
-          setIsError(true)
-        } else {
-          saveNewItem(_id, data)
-          setInput(0)
-          setErrorMessage()
-          setIsError(false)
-          setSpendIsOpen(false)
-        }
-      })
-  }
-
-  function handleAbortSpendClick() {
-    setInput(0)
-    setSpendIsOpen(false)
-  }
+  const {
+    spendIsOpen,
+    input,
+    setInput,
+    handleAbortSpendClick,
+    handleDonationClick,
+    donationVolumne,
+    isError,
+    errorMessage,
+    setIsError,
+    setSpendIsOpen,
+  } = useItem(donations, user, _id, saveNewItem)
 
   return (
     <ItemWrapper>
