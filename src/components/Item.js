@@ -5,6 +5,7 @@ import { Carousel } from 'react-responsive-carousel'
 import { Image } from 'cloudinary-react'
 import useItem from '../hooks/useItem'
 import SpendArea from './SpendArea'
+import PriceDisplay from './PriceDisplay'
 
 export default function Item({ data, isAdmin, index, user, saveNewItem }) {
   const { description, donations, image_urls, name, price, _id } = data || {}
@@ -31,19 +32,7 @@ export default function Item({ data, isAdmin, index, user, saveNewItem }) {
           </div>
         ))}
       </Carousel>
-      <PriceWrapper>
-        {!(donationVolumne === price) && (
-          <PriceTag>{`Preis: ${price}€`}</PriceTag>
-        )}
-        <InfoOnDonation>
-          <span>bereits gespendet:</span>
-          <CurrentDonation isFull={donationVolumne === price}>
-            {donationVolumne === price
-              ? `${donationVolumne}€ ✔`
-              : `${donationVolumne}€`}
-          </CurrentDonation>
-        </InfoOnDonation>
-      </PriceWrapper>
+      <PriceDisplay donationVolumne={donationVolumne} price={price} />
       <h2>{name}</h2>
       <Description>{description}</Description>
       <ProgressBar
@@ -76,23 +65,6 @@ export default function Item({ data, isAdmin, index, user, saveNewItem }) {
     </ItemWrapper>
   )
 }
-
-const PriceWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-`
-
-const InfoOnDonation = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 15px;
-  & span {
-    font-family: 'Open Sans';
-    font-size: 0.8em;
-    font-weight: bold;
-  }
-`
 
 const ItemWrapper = styled.section`
   display: flex;
@@ -127,30 +99,6 @@ const Abortbutton = styled(WantSpendButton)`
   color: white;
 `
 
-const PriceTag = styled.p`
-  display: flex;
-  justify-content: center;
-  align-self: flex-end;
-  padding: 7px;
-  width: 120px;
-  color: white;
-  font-weight: bold;
-  border-radius: 10px;
-  background-color: #e07a5f;
-  margin-bottom: 0;
-`
-
-const CurrentDonation = styled.p`
-  display: flex;
-  justify-content: center;
-  padding: 7px;
-  width: 120px;
-  margin: 0;
-  color: ${(props) => (props.isFull ? 'white' : 'black')};
-  font-weight: bold;
-  border-radius: 10px;
-  background-color: ${(props) => (props.isFull ? '#83c5be' : '#f0efeb')};
-`
 const Description = styled.p`
   font-size: 0.8em;
 `
