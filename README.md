@@ -1,4 +1,39 @@
-# Getting Started with Create React App
+![](docs/AppCover.jpg)
+
+# kindr.kram
+
+> what means kindr.kram ;-)
+
+kindr.kram helps you to keep track of the money your relatives have donated to your baby wish list.
+
+- pregnant
+- parentes want to give some money
+- they can decide where the money should go
+- to keep them involved
+
+## Build with
+
+- React
+- Express.js
+- MongoDB & mongoose
+- jwt auth
+- styled-components
+- Cloudinary
+
+# Getting Started
+
+## Prerequisites
+
+In order to run the app you need on your local machine you need
+
+- a Mongo DB (local or in the cloud doesn't matter)
+- a free cloudinary account (for picture upload)
+
+## Installation
+
+- clone the project
+- `cd` in the root directory and hit `npm install`
+- you nee
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
