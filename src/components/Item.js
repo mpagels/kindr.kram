@@ -7,7 +7,7 @@ import useItem from '../hooks/useItem'
 import SpendArea from './SpendArea'
 import PriceDisplay from './PriceDisplay'
 
-export default function Item({ data, isAdmin, index, user, saveNewItem }) {
+export default function Item({ data, isAdmin, user, saveNewItem }) {
   const { description, donations, image_urls, name, price, _id } = data || {}
 
   const {
@@ -26,7 +26,7 @@ export default function Item({ data, isAdmin, index, user, saveNewItem }) {
   return (
     <ItemWrapper>
       <Carousel showThumbs={false}>
-        {image_urls.map((url, index) => (
+        {image_urls.map((url) => (
           <Image key={url} cloudName="martinpagels-dev" publicId={url} />
         ))}
       </Carousel>
