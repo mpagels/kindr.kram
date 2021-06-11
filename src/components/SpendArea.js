@@ -15,9 +15,9 @@ export default function SpendArea({
         <SpendWrapper>
           <SpendInput
             type="number"
-            min="0"
+            min="1"
             value={input}
-            onChange={(e) => handleInput(Number(e.target.value))}
+            onChange={handleInput}
           />
           <SpendButton onClick={handleDonationClick}>Spenden</SpendButton>
         </SpendWrapper>

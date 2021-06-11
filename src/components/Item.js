@@ -13,7 +13,7 @@ export default function Item({ data, isAdmin, user, saveNewItem }) {
   const {
     spendIsOpen,
     input,
-    setInput,
+    handleOnInputChange,
     handleAbortSpendClick,
     handleDonationClick,
     donationVolumne,
@@ -41,7 +41,7 @@ export default function Item({ data, isAdmin, user, saveNewItem }) {
       {spendIsOpen && (
         <SpendArea
           input={input}
-          handleInput={setInput}
+          handleInput={handleOnInputChange}
           handleDonationClick={handleDonationClick}
           isError={isError}
           errorMessage={errorMessage}

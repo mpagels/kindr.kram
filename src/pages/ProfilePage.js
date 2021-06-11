@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from 'react'
+import { useContext, useState } from 'react'
 import styled from 'styled-components/macro'
 import MiscContext from '../context/TestContext'
 import UserContext from '../context/UserContext'
@@ -11,7 +11,7 @@ export default function ProfilePage() {
   const { setBudget } = useContext(MiscContext)
   const { user } = useContext(UserContext)
   const { logoutUser } = useAuth()
-  const inputRef = useRef()
+  const [value, setValue] = useState()
   const { transactions, setTransactions, isLoading } = useFindTransaction()
 
   if (isLoading) {
@@ -26,7 +26,8 @@ export default function ProfilePage() {
           Banking
           <TransactionInput
             name="budget"
-            ref={inputRef}
+            value={value}
+            onChange={handleOnInputChange}
             type="number"
             required
             min={1}
@@ -74,10 +75,15 @@ export default function ProfilePage() {
     </Wrapper>
   )
 
+  function handleOnInputChange(event) {
+    const { value } = event.target
+    setValue(Number(Number(value).toFixed(2)))
+  }
+
   async function makeDeposit() {
     const deposit = {
       userName: user.username,
-      amount: Number(inputRef.current.value),
+      amount: Number(value),
       category: 'deposit',
     }
 
@@ -93,7 +99,7 @@ export default function ProfilePage() {
     if (depositData.status === 'error') {
       setError(depositData.message)
     } else {
-      inputRef.current.value = ''
+      setValue('')
       getTransactionsAndSetBudget()
       setError(false)
     }
@@ -102,7 +108,7 @@ export default function ProfilePage() {
   async function makeWithDraw() {
     const withdraw = {
       userName: user.username,
-      amount: Number(inputRef.current.value),
+      amount: Number(value),
       category: 'withdraw',
     }
     const withDrawResponse = await fetch('/api/transaction/withdraw', {
@@ -119,7 +125,7 @@ export default function ProfilePage() {
       setError(withDrawData.message)
       getTransactionsAndSetBudget()
     } else {
-      inputRef.current.value = ''
+      setValue('')
       getTransactionsAndSetBudget()
       setError(false)
     }

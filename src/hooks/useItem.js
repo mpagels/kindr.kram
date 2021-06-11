@@ -15,6 +15,15 @@ export default function useItem(donations, user, _id, saveNewItem) {
     [donations]
   )
 
+  function handleOnInputChange(event) {
+    const { value } = event.target
+    if (value !== '') {
+      setInput(Number(Number(value).toFixed(2)))
+    } else {
+      setInput('')
+    }
+  }
+
   function handleDonationClick() {
     const donation = {
       userName: user,
@@ -46,8 +55,9 @@ export default function useItem(donations, user, _id, saveNewItem) {
   }
 
   function handleAbortSpendClick() {
-    setInput(0)
+    setInput('')
     setSpendIsOpen(false)
+    setIsError(false)
   }
 
   return {
@@ -58,7 +68,7 @@ export default function useItem(donations, user, _id, saveNewItem) {
     isError,
     errorMessage,
     input,
-    setInput,
+    handleOnInputChange,
     setIsError,
     setSpendIsOpen,
   }
