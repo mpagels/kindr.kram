@@ -55,8 +55,9 @@ export default function useItem(donations, user, _id, saveNewItem) {
   }
 
   function handleAbortSpendClick() {
-    setInput(0)
+    setInput('')
     setSpendIsOpen(false)
+    setIsError(false)
   }
 
   return {
