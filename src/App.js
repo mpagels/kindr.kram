@@ -1,12 +1,11 @@
 import styled from 'styled-components/macro'
-import { useEffect, useState } from 'react'
 
-import { Switch, Route, useLocation, Redirect } from 'react-router-dom'
+import { Switch, Route, Redirect } from 'react-router-dom'
 import NewItemForm from './components/NewItemForm'
 import LoginPage from './pages/LoginPage'
 import AdminPage from './pages/AdminPage'
 
-import ItemContext from './context/ItemContext'
+import ItemContextProvider from './context/ItemContext'
 import UserContext from './context/UserContext'
 import MiscContext from './context/TestContext'
 
@@ -17,34 +16,14 @@ import useFindUser from './hooks/useFindUser'
 import useGetBudget from './hooks/useGetBudget'
 
 function App() {
-  const location = useLocation()
-
-  const [items, setItems] = useState()
   const { user, setUser, isLoading, setLoading } = useFindUser()
   const { budget, setBudget } = useGetBudget(user, items)
-
-  useEffect(() => {
-    fetch('/api/item')
-      .then((res) => res.json())
-      .then((data) => setItems(data))
-  }, [location])
-
-  function saveNewItem(itemId, newItem) {
-    const indexOfItem = items.findIndex((item) => item._id === itemId)
-
-    const newItems = [
-      ...items.slice(0, indexOfItem),
-      newItem,
-      ...items.slice(indexOfItem + 1),
-    ]
-    setItems(newItems)
-  }
 
   return (
     <Wrapper>
       <MiscContext.Provider value={{ budget, setBudget }}>
         <UserContext.Provider value={{ user, setUser, isLoading, setLoading }}>
-          <ItemContext.Provider value={{ items, saveNewItem }}>
+          <ItemContextProvider>
             <Switch>
               <Route path="/login">
                 <LoginPage />
@@ -70,7 +49,7 @@ function App() {
                 component={user?.role === 'admin' && UserPage}
               />
             </Switch>
-          </ItemContext.Provider>
+          </ItemContextProvider>
         </UserContext.Provider>
       </MiscContext.Provider>
     </Wrapper>
