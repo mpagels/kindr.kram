@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
 import getSumOfDonation from '../utils/getSumOfDonation'
+import editSymbol from '../assets/pngs/edit.png'
 
 export default function ItemForAdmin({ data }) {
   const { price, donations, name } = data
@@ -10,7 +11,13 @@ export default function ItemForAdmin({ data }) {
   return (
     <ItemWrapper>
       <ContentWrapper>
-        <h2>{name}</h2>
+        <h2>
+          {name}
+          <EditButton onClick={() => console.log(data._id)}>
+            <img src={editSymbol} alt="edit-symbol" />
+          </EditButton>
+        </h2>
+
         <div>
           <p>Eingestellter Preis: {price}€</p>
           <p>Fehlt noch: {price - sumOfDonation}€</p>
@@ -62,4 +69,9 @@ const CircleWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`
+const EditButton = styled.button`
+  all: unset;
+  cursor: pointer;
+  margin-left: 5px;
 `
