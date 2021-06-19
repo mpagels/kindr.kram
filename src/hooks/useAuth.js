@@ -48,8 +48,6 @@ export default function useAuth(notify) {
   //login user
   const loginUser = async (data) => {
     const { username, password } = data
-    console.log('username', username.value)
-    console.log('password', password.value)
     axios
       .post(
         '/api/login',
