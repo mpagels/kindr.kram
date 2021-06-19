@@ -2,7 +2,6 @@ export default function getOrderedItemList(items) {
   const sortedItems = items?.sort((a, b) => {
     const itemA =
       a.price - a.donations.reduce((pre, cur) => pre + cur.amount, 0)
-    console.log('itemA', itemA)
     const itemB =
       b.price - b.donations.reduce((pre, cur) => pre + cur.amount, 0)
     return itemA - itemB
@@ -25,7 +24,6 @@ export default function getOrderedItemList(items) {
     listOfItemsWithDontationNeeded.sort((a, b) => {
       const itemA =
         a.price - a.donations.reduce((pre, cur) => pre + cur.amount, 0)
-      console.log('itemA', itemA)
       const itemB =
         b.price - b.donations.reduce((pre, cur) => pre + cur.amount, 0)
       return itemA - itemB || a.price - b.price
