@@ -9,7 +9,6 @@ export default function useItem(donations, user, _id, saveNewItem) {
   const donationVolumne = useMemo(
     () =>
       donations.reduce((pre, cur) => {
-        console.log('I run')
         return pre + cur.amount
       }, 0),
     [donations]
