@@ -3,10 +3,7 @@ import styled from 'styled-components/macro'
 import { Switch, Route } from 'react-router-dom'
 import LoginPage from './pages/LoginPage'
 
-import ItemContextProvider from './context/ItemContext'
-import BudgetContextProvider from './context/BudgetContext'
-import UserContextProvider from './context/UserContext'
-
+import ContextWrapper from './context/ContextWrapper'
 import PrivateRoute from './components/PrivateRoute'
 import ProfilePage from './pages/ProfilePage'
 
@@ -18,31 +15,23 @@ import CustomItemsForAdmin from './components/CustomItemsForAdmins'
 function App() {
   return (
     <Wrapper>
-      <UserContextProvider>
-        <ItemContextProvider>
-          <BudgetContextProvider>
-            <Switch>
-              <Route path="/login">
-                <LoginPage />
-              </Route>
-
-              <Route exact path="/">
-                <CustomRedirect />
-              </Route>
-
-              <PrivateRoute path="/profil" component={ProfilePage} />
-
-              <PrivateRoute path="/create-item" component={CustomCreateItem} />
-
-              <PrivateRoute path="/items" component={CustomItemRedirect} />
-              <PrivateRoute
-                path="/items-for-admin"
-                component={CustomItemsForAdmin}
-              />
-            </Switch>
-          </BudgetContextProvider>
-        </ItemContextProvider>
-      </UserContextProvider>
+      <ContextWrapper>
+        <Switch>
+          <Route path="/login">
+            <LoginPage />
+          </Route>
+          <Route exact path="/">
+            <CustomRedirect />
+          </Route>
+          <PrivateRoute path="/profil" component={ProfilePage} />
+          <PrivateRoute path="/create-item" component={CustomCreateItem} />
+          <PrivateRoute path="/items" component={CustomItemRedirect} />
+          <PrivateRoute
+            path="/items-for-admin"
+            component={CustomItemsForAdmin}
+          />
+        </Switch>
+      </ContextWrapper>
     </Wrapper>
   )
 }
