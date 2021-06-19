@@ -1,7 +1,7 @@
 import styled from 'styled-components/macro'
 import { useContext } from 'react'
-import ItemContext from '../context/ItemContext'
-import UserContext from '../context/UserContext'
+import { ItemContext } from '../context/ItemContext'
+import { UserContext } from '../context/UserContext'
 import Item from '../components/Item'
 import getOrderedItemList from '../utils/getOrderedItemList'
 

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { useContext, useEffect, useState } from 'react'
-import UserContext from '../context/UserContext'
+import { UserContext } from '../context/UserContext'
 
 export default function useFindTransaction() {
   const [transactions, setTransactions] = useState()

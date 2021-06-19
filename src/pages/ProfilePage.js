@@ -1,14 +1,14 @@
 import { useContext, useState } from 'react'
 import styled from 'styled-components/macro'
-import MiscContext from '../context/TestContext'
-import UserContext from '../context/UserContext'
 import useFindTransaction from '../hooks/useFindTransaction'
 import getCategoryColor from '../utils/getCategoryColor'
 import useAuth from '../hooks/useAuth'
+import { UserContext } from '../context/UserContext'
+import { BudgetContext } from '../context/BudgetContext'
 
 export default function ProfilePage() {
   const [error, setError] = useState('')
-  const { setBudget } = useContext(MiscContext)
+  const { setBudget } = useContext(BudgetContext)
   const { user } = useContext(UserContext)
   const { logoutUser } = useAuth()
   const [value, setValue] = useState()

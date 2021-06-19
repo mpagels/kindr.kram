@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import axios from 'axios'
-import UserContext from '../context/UserContext'
+import { UserContext } from '../context/UserContext'
 
 export default function useAuth(notify) {
   let history = useHistory()
