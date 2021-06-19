@@ -1,10 +1,8 @@
-import { createContext, useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { createContext, useState } from 'react'
 
 export const ItemContext = createContext(null)
 
 export default function ItemContextProvider({ children }) {
-  const location = useLocation()
   const [items, setItems] = useState([])
 
   function saveNewItem(itemId, newItem) {
@@ -17,12 +15,6 @@ export default function ItemContextProvider({ children }) {
     ]
     setItems(newItems)
   }
-
-  useEffect(() => {
-    fetch('/api/item')
-      .then((res) => res.json())
-      .then((data) => setItems(data))
-  }, [location])
 
   return (
     <ItemContext.Provider value={{ items, setItems, saveNewItem }}>
