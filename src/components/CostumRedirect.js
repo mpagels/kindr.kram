@@ -3,7 +3,10 @@ import { UserContext } from '../context/UserContext'
 import { Redirect } from 'react-router'
 
 export default function CustomRedirect() {
-  const { user } = useContext(UserContext)
+  const { user, isLoading } = useContext(UserContext)
 
+  if (isLoading) {
+    return <div></div>
+  }
   return user ? <Redirect to="/items" /> : <Redirect to="/login" />
 }
