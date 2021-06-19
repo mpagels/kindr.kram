@@ -6,7 +6,7 @@ import { ReactComponent as SavingLogo } from '../assets/svg/savings.svg'
 import { ReactComponent as ListLogo } from '../assets/svg/list.svg'
 import { ReactComponent as AdminLogo } from '../assets/svg/admin-panel.svg'
 import { useContext } from 'react'
-import UserContext from '../context/UserContext'
+import { UserContext } from '../context/UserContext'
 import CreateButton from './CreateButton'
 import AdminButton from './AdminButton'
 

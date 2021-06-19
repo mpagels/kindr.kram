@@ -5,7 +5,7 @@ export const ItemContext = createContext(null)
 
 export default function ItemContextProvider({ children }) {
   const location = useLocation()
-  const [items, setItems] = useState()
+  const [items, setItems] = useState([])
 
   function saveNewItem(itemId, newItem) {
     const indexOfItem = items.findIndex((item) => item._id === itemId)
