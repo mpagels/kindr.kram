@@ -14,6 +14,7 @@ export default function ProfilePage() {
   const { logoutUser } = useAuth()
   const [value, setValue] = useState()
   const { transactions, setTransactions, isLoading } = useFindTransaction()
+  const [isOpen, setIsOpen] = useState(false)
 
   if (isLoading) {
     return <></>
@@ -38,39 +39,62 @@ export default function ProfilePage() {
             <DepositButton onClick={makeDeposit}>Einzahlen</DepositButton>
             <WithDrawButton onClick={makeWithDraw}>Auszahlen</WithDrawButton>
           </KontoButtonWrapper>
-          <TransactionList>
-            {transactions &&
-              transactions
-                .map((transaction) =>
-                  transaction.category === 'donation' ? (
-                    <TransaktionItem key={transaction._id}>
-                      {`${transaction.from.name} hat am ${convertTime(
-                        transaction.performed_at
-                      )}`}
-                      <Amount category={transaction.category}>
-                        {` ${transaction.amount}€ `}
-                      </Amount>
-                      für <strong>{transaction.for_item.name} </strong>
-                      gespendet.
-                    </TransaktionItem>
-                  ) : (
-                    <TransaktionItem key={transaction._id}>
-                      {`${transaction.from.name} hat am ${convertTime(
-                        transaction.performed_at
-                      )}`}
-                      <Amount category={transaction.category}>
-                        {` ${transaction.amount}€ `}
-                      </Amount>
-                      {`${
-                        transaction.category === 'deposit'
-                          ? 'eingezahlt'
-                          : 'abgehoben'
-                      }.`}
-                    </TransaktionItem>
-                  )
-                )
-                .reverse()}
-          </TransactionList>
+          <ShowTransactionsButton onClick={() => setIsOpen((prev) => !prev)}>
+            {isOpen
+              ? 'Schließe Transaktionen'
+              : 'Zeige bisherige Transaktionen'}
+          </ShowTransactionsButton>
+          {isOpen && (
+            <TransactionList>
+              {transactions
+                ? transactions
+                    .map((transaction) =>
+                      transaction.category === 'donation' ? (
+                        <TransaktionItem key={transaction._id}>
+                          {`${transaction.from.name} hat am ${convertTime(
+                            transaction.performed_at
+                          )}`}
+                          <Amount category={transaction.category}>
+                            {` ${transaction.amount}€ `}
+                          </Amount>
+                          für <strong>{transaction.for_item.name} </strong>
+                          gespendet.
+                        </TransaktionItem>
+                      ) : (
+                        <TransaktionItem key={transaction._id}>
+                          {`${transaction.from.name} hat am ${convertTime(
+                            transaction.performed_at
+                          )}`}
+                          <Amount category={transaction.category}>
+                            {` ${transaction.amount}€ `}
+                          </Amount>
+                          {`${
+                            transaction.category === 'deposit'
+                              ? 'eingezahlt'
+                              : 'abgehoben'
+                          }.`}
+                        </TransaktionItem>
+                      )
+                    )
+                    .reverse()
+                : 'Keine Transaktionen bisher.'}
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  marginTop: '20px',
+                }}
+              >
+                <ShowTransactionsButton
+                  onClick={() => setIsOpen((prev) => !prev)}
+                >
+                  {isOpen
+                    ? 'Schließe Transaktionen'
+                    : 'Zeige bisherige Transaktionen'}
+                </ShowTransactionsButton>
+              </div>
+            </TransactionList>
+          )}
         </>
       )}
     </Wrapper>
@@ -192,4 +216,12 @@ const TransaktionItem = styled.li`
 const Amount = styled.span`
   font-weight: bold;
   color: ${(props) => getCategoryColor(props.category)};
+`
+
+const ShowTransactionsButton = styled.button`
+  all: unset;
+  cursor: pointer;
+  border-radius: 10px;
+  padding: 5px 10px;
+  background-color: lightgrey;
 `
