@@ -1,21 +1,23 @@
-import { useContext, useState } from 'react'
 import styled from 'styled-components/macro'
-import useFindTransaction from '../hooks/useFindTransaction'
 import getCategoryColor from '../utils/getCategoryColor'
-import useAuth from '../hooks/useAuth'
-import { UserContext } from '../context/UserContext'
-import { BudgetContext } from '../context/BudgetContext'
 import AbortButton from '../components/AbortButton'
 import convertTime from '../utils/convertTime'
+import useProfilPage from '../hooks/useProfilPage'
 
 export default function ProfilePage() {
-  const [error, setError] = useState('')
-  const { setBudget } = useContext(BudgetContext)
-  const { user } = useContext(UserContext)
-  const { logoutUser } = useAuth()
-  const [value, setValue] = useState()
-  const { transactions, setTransactions, isLoading } = useFindTransaction()
-  const [isOpen, setIsOpen] = useState(false)
+  const {
+    error,
+    isLoading,
+    user,
+    transactions,
+    logoutUser,
+    handleOnInputChange,
+    makeDeposit,
+    makeWithDraw,
+    value,
+    setIsOpen,
+    isOpen,
+  } = useProfilPage()
 
   if (isLoading) {
     return <></>
@@ -100,72 +102,6 @@ export default function ProfilePage() {
       )}
     </Wrapper>
   )
-
-  function handleOnInputChange(event) {
-    const { value } = event.target
-    setValue(Number(Number(value).toFixed(2)))
-  }
-
-  async function makeDeposit() {
-    const deposit = {
-      userName: user.username,
-      amount: Number(value),
-      category: 'deposit',
-    }
-
-    const depositResponse = await fetch('/api/transaction/deposit', {
-      method: 'POST',
-      body: JSON.stringify(deposit),
-      headers: {
-        'Content-Type': 'application/json',
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    })
-    const depositData = await depositResponse.json()
-    if (depositData.status === 'error') {
-      setError(depositData.message)
-    } else {
-      setValue('')
-      getTransactionsAndSetBudget()
-      setError(false)
-    }
-  }
-
-  async function makeWithDraw() {
-    const withdraw = {
-      userName: user.username,
-      amount: Number(value),
-      category: 'withdraw',
-    }
-    const withDrawResponse = await fetch('/api/transaction/withdraw', {
-      method: 'POST',
-      body: JSON.stringify(withdraw),
-      headers: {
-        'Content-Type': 'application/json',
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    })
-    const withDrawData = await withDrawResponse.json()
-
-    if (withDrawData.status === 'error') {
-      setError(withDrawData.message)
-      getTransactionsAndSetBudget()
-    } else {
-      setValue('')
-      getTransactionsAndSetBudget()
-      setError(false)
-    }
-  }
-
-  async function getTransactionsAndSetBudget() {
-    const transactionRespone = await fetch('/api/transaction/Toerpt')
-    const transactionsData = await transactionRespone.json()
-    setTransactions(transactionsData[0].transactions)
-
-    const budgetResponse = await fetch(`/api/user/${user.username}`)
-    const budgetData = await budgetResponse.json()
-    setBudget(budgetData.from_location.budget)
-  }
 }
 
 const Wrapper = styled.div`
