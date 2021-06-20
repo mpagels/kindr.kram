@@ -169,6 +169,7 @@ const TransactionError = styled.span`
 const KontoButtonWrapper = styled.div`
   display: flex;
   gap: 10px;
+  margin: 20px 0;
 `
 const DepositButton = styled.button`
   all: unset;
