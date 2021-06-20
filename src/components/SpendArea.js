@@ -1,4 +1,5 @@
 import styled from 'styled-components/macro'
+import AbortButton from './AbortButton'
 
 export default function SpendArea({
   input,
@@ -30,7 +31,7 @@ export default function SpendArea({
           </ErrorMessage>
         )}
       </div>
-      <Abortbutton onClick={handleAbortSpendClick}>Abbrechen</Abortbutton>
+      <AbortButton onClick={handleAbortSpendClick} label="Abbrechen" />
     </>
   )
 }
@@ -69,17 +70,4 @@ const SpendButton = styled.button`
   background-color: #83c5be;
   padding: 10px;
   border-radius: 10px;
-`
-const Abortbutton = styled.button`
-  all: unset;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 15px;
-  border-radius: 15px;
-  font-weight: bold;
-  margin: 10px 0;
-  background-color: #e07a5f;
-  color: white;
 `

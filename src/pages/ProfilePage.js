@@ -5,6 +5,7 @@ import getCategoryColor from '../utils/getCategoryColor'
 import useAuth from '../hooks/useAuth'
 import { UserContext } from '../context/UserContext'
 import { BudgetContext } from '../context/BudgetContext'
+import AbortButton from '../components/AbortButton'
 
 export default function ProfilePage() {
   const [error, setError] = useState('')
@@ -20,7 +21,7 @@ export default function ProfilePage() {
   return (
     <Wrapper>
       Hallo {user.username}
-      <button onClick={logoutUser}>Logout</button>
+      <AbortButton onClick={logoutUser} label="Logout" />
       {user.role !== 'admin' && (
         <>
           Banking
