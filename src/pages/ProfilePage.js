@@ -6,6 +6,7 @@ import useAuth from '../hooks/useAuth'
 import { UserContext } from '../context/UserContext'
 import { BudgetContext } from '../context/BudgetContext'
 import AbortButton from '../components/AbortButton'
+import convertTime from '../utils/convertTime'
 
 export default function ProfilePage() {
   const [error, setError] = useState('')
@@ -154,15 +155,6 @@ export default function ProfilePage() {
       getTransactionsAndSetBudget()
       setError(false)
     }
-  }
-  function convertTime(time) {
-    const options = {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    }
-    return new Date(Date.parse(time)).toLocaleDateString('de-DE', options)
   }
 
   async function getTransactionsAndSetBudget() {
