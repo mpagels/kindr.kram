@@ -1,18 +1,23 @@
-import { useContext, useState } from 'react'
 import styled from 'styled-components/macro'
-import MiscContext from '../context/TestContext'
-import UserContext from '../context/UserContext'
-import useFindTransaction from '../hooks/useFindTransaction'
 import getCategoryColor from '../utils/getCategoryColor'
-import useAuth from '../hooks/useAuth'
+import AbortButton from '../components/AbortButton'
+import convertTime from '../utils/convertTime'
+import useProfilPage from '../hooks/useProfilPage'
 
 export default function ProfilePage() {
-  const [error, setError] = useState('')
-  const { setBudget } = useContext(MiscContext)
-  const { user } = useContext(UserContext)
-  const { logoutUser } = useAuth()
-  const [value, setValue] = useState()
-  const { transactions, setTransactions, isLoading } = useFindTransaction()
+  const {
+    error,
+    isLoading,
+    user,
+    transactions,
+    logoutUser,
+    handleOnInputChange,
+    makeDeposit,
+    makeWithDraw,
+    value,
+    setIsOpen,
+    isOpen,
+  } = useProfilPage()
 
   if (isLoading) {
     return <></>
@@ -20,7 +25,7 @@ export default function ProfilePage() {
   return (
     <Wrapper>
       Hallo {user.username}
-      <button onClick={logoutUser}>Logout</button>
+      <AbortButton onClick={logoutUser} label="Logout" />
       {user.role !== 'admin' && (
         <>
           Banking
@@ -37,118 +42,66 @@ export default function ProfilePage() {
             <DepositButton onClick={makeDeposit}>Einzahlen</DepositButton>
             <WithDrawButton onClick={makeWithDraw}>Auszahlen</WithDrawButton>
           </KontoButtonWrapper>
-          <TransactionList>
-            {transactions &&
-              transactions
-                .map((transaction) =>
-                  transaction.category === 'donation' ? (
-                    <TransaktionItem key={transaction._id}>
-                      {`${transaction.from.name} hat am ${convertTime(
-                        transaction.performed_at
-                      )}`}
-                      <Amount category={transaction.category}>
-                        {` ${transaction.amount}€ `}
-                      </Amount>
-                      für <strong>{transaction.for_item.name} </strong>
-                      gespendet.
-                    </TransaktionItem>
-                  ) : (
-                    <TransaktionItem key={transaction._id}>
-                      {`${transaction.from.name} hat am ${convertTime(
-                        transaction.performed_at
-                      )}`}
-                      <Amount category={transaction.category}>
-                        {` ${transaction.amount}€ `}
-                      </Amount>
-                      {`${
-                        transaction.category === 'deposit'
-                          ? 'eingezahlt'
-                          : 'abgehoben'
-                      }.`}
-                    </TransaktionItem>
-                  )
-                )
-                .reverse()}
-          </TransactionList>
+          <ShowTransactionsButton onClick={() => setIsOpen((prev) => !prev)}>
+            {isOpen
+              ? 'Schließe Transaktionen'
+              : 'Zeige bisherige Transaktionen'}
+          </ShowTransactionsButton>
+          {isOpen && (
+            <TransactionList>
+              {transactions
+                ? transactions
+                    .map((transaction) =>
+                      transaction.category === 'donation' ? (
+                        <TransaktionItem key={transaction._id}>
+                          {`${transaction.from.name} hat am ${convertTime(
+                            transaction.performed_at
+                          )}`}
+                          <Amount category={transaction.category}>
+                            {` ${transaction.amount}€ `}
+                          </Amount>
+                          für <strong>{transaction.for_item.name} </strong>
+                          gespendet.
+                        </TransaktionItem>
+                      ) : (
+                        <TransaktionItem key={transaction._id}>
+                          {`${transaction.from.name} hat am ${convertTime(
+                            transaction.performed_at
+                          )}`}
+                          <Amount category={transaction.category}>
+                            {` ${transaction.amount}€ `}
+                          </Amount>
+                          {`${
+                            transaction.category === 'deposit'
+                              ? 'eingezahlt'
+                              : 'abgehoben'
+                          }.`}
+                        </TransaktionItem>
+                      )
+                    )
+                    .reverse()
+                : 'Keine Transaktionen bisher.'}
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  marginTop: '20px',
+                }}
+              >
+                <ShowTransactionsButton
+                  onClick={() => setIsOpen((prev) => !prev)}
+                >
+                  {isOpen
+                    ? 'Schließe Transaktionen'
+                    : 'Zeige bisherige Transaktionen'}
+                </ShowTransactionsButton>
+              </div>
+            </TransactionList>
+          )}
         </>
       )}
     </Wrapper>
   )
-
-  function handleOnInputChange(event) {
-    const { value } = event.target
-    setValue(Number(Number(value).toFixed(2)))
-  }
-
-  async function makeDeposit() {
-    const deposit = {
-      userName: user.username,
-      amount: Number(value),
-      category: 'deposit',
-    }
-
-    const depositResponse = await fetch('/api/transaction/deposit', {
-      method: 'POST',
-      body: JSON.stringify(deposit),
-      headers: {
-        'Content-Type': 'application/json',
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    })
-    const depositData = await depositResponse.json()
-    if (depositData.status === 'error') {
-      setError(depositData.message)
-    } else {
-      setValue('')
-      getTransactionsAndSetBudget()
-      setError(false)
-    }
-  }
-
-  async function makeWithDraw() {
-    const withdraw = {
-      userName: user.username,
-      amount: Number(value),
-      category: 'withdraw',
-    }
-    const withDrawResponse = await fetch('/api/transaction/withdraw', {
-      method: 'POST',
-      body: JSON.stringify(withdraw),
-      headers: {
-        'Content-Type': 'application/json',
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    })
-    const withDrawData = await withDrawResponse.json()
-
-    if (withDrawData.status === 'error') {
-      setError(withDrawData.message)
-      getTransactionsAndSetBudget()
-    } else {
-      setValue('')
-      getTransactionsAndSetBudget()
-      setError(false)
-    }
-  }
-  function convertTime(time) {
-    const options = {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    }
-    return new Date(Date.parse(time)).toLocaleDateString('de-DE', options)
-  }
-
-  async function getTransactionsAndSetBudget() {
-    const transactionRespone = await fetch('/api/transaction/Toerpt')
-    const transactionsData = await transactionRespone.json()
-    setTransactions(transactionsData[0].transactions)
-
-    const budgetResponse = await fetch(`/api/user/${user.username}`)
-    const budgetData = await budgetResponse.json()
-    setBudget(budgetData.from_location.budget)
-  }
 }
 
 const Wrapper = styled.div`
@@ -168,6 +121,7 @@ const TransactionError = styled.span`
 const KontoButtonWrapper = styled.div`
   display: flex;
   gap: 10px;
+  margin: 20px 0;
 `
 const DepositButton = styled.button`
   all: unset;
@@ -190,4 +144,12 @@ const TransaktionItem = styled.li`
 const Amount = styled.span`
   font-weight: bold;
   color: ${(props) => getCategoryColor(props.category)};
+`
+
+const ShowTransactionsButton = styled.button`
+  all: unset;
+  cursor: pointer;
+  border-radius: 10px;
+  padding: 5px 10px;
+  background-color: lightgrey;
 `

@@ -1,78 +1,37 @@
 import styled from 'styled-components/macro'
-import { useEffect, useState } from 'react'
 
-import { Switch, Route, useLocation, Redirect } from 'react-router-dom'
-import NewItemForm from './components/NewItemForm'
+import { Switch, Route } from 'react-router-dom'
 import LoginPage from './pages/LoginPage'
-import AdminPage from './pages/AdminPage'
 
-import ItemContext from './context/ItemContext'
-import UserContext from './context/UserContext'
-import MiscContext from './context/TestContext'
-
-import UserPage from './pages/UserPage'
+import ContextWrapper from './context/ContextWrapper'
 import PrivateRoute from './components/PrivateRoute'
 import ProfilePage from './pages/ProfilePage'
-import useFindUser from './hooks/useFindUser'
-import useGetBudget from './hooks/useGetBudget'
+
+import CustomRedirect from './components/CostumRedirect'
+import CustomCreateItem from './components/CustomCreateItem'
+import CustomItemRedirect from './components/CustomItemRedirect'
+import CustomItemsForAdmin from './components/CustomItemsForAdmins'
 
 function App() {
-  const location = useLocation()
-
-  const [items, setItems] = useState()
-  const { user, setUser, isLoading, setLoading } = useFindUser()
-  const { budget, setBudget } = useGetBudget(user, items)
-
-  useEffect(() => {
-    fetch('/api/item')
-      .then((res) => res.json())
-      .then((data) => setItems(data))
-  }, [location])
-
-  function saveNewItem(itemId, newItem) {
-    const indexOfItem = items.findIndex((item) => item._id === itemId)
-
-    const newItems = [
-      ...items.slice(0, indexOfItem),
-      newItem,
-      ...items.slice(indexOfItem + 1),
-    ]
-    setItems(newItems)
-  }
-
   return (
     <Wrapper>
-      <MiscContext.Provider value={{ budget, setBudget }}>
-        <UserContext.Provider value={{ user, setUser, isLoading, setLoading }}>
-          <ItemContext.Provider value={{ items, saveNewItem }}>
-            <Switch>
-              <Route path="/login">
-                <LoginPage />
-              </Route>
-
-              <Route exact path="/">
-                {user ? <Redirect to="/items" /> : <Redirect to="/login" />}
-              </Route>
-
-              <PrivateRoute path="/profil" component={ProfilePage} />
-
-              <PrivateRoute
-                path="/create-item"
-                component={user?.role === 'admin' ? NewItemForm : LoginPage}
-              />
-
-              <PrivateRoute
-                path="/items"
-                component={user?.role === 'admin' ? AdminPage : UserPage}
-              />
-              <PrivateRoute
-                path="/items-for-admin"
-                component={user?.role === 'admin' && UserPage}
-              />
-            </Switch>
-          </ItemContext.Provider>
-        </UserContext.Provider>
-      </MiscContext.Provider>
+      <ContextWrapper>
+        <Switch>
+          <Route path="/login">
+            <LoginPage />
+          </Route>
+          <Route exact path="/">
+            <CustomRedirect />
+          </Route>
+          <PrivateRoute path="/profil" component={ProfilePage} />
+          <PrivateRoute path="/create-item" component={CustomCreateItem} />
+          <PrivateRoute path="/items" component={CustomItemRedirect} />
+          <PrivateRoute
+            path="/items-for-admin"
+            component={CustomItemsForAdmin}
+          />
+        </Switch>
+      </ContextWrapper>
     </Wrapper>
   )
 }

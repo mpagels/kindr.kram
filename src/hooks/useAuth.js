@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import axios from 'axios'
-import UserContext from '../context/UserContext'
+import { UserContext } from '../context/UserContext'
 
 export default function useAuth(notify) {
   let history = useHistory()
@@ -48,8 +48,6 @@ export default function useAuth(notify) {
   //login user
   const loginUser = async (data) => {
     const { username, password } = data
-    console.log('username', username.value)
-    console.log('password', password.value)
     axios
       .post(
         '/api/login',
