@@ -1,8 +1,11 @@
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import useEditItemForm from '../hooks/useEditItemForm'
+import AbortButton from './AbortButton'
 import PictureUpload from './PictureUpload'
 
 export default function EditItemForm() {
+  const history = useHistory()
   const {
     myWidget,
     uploadedPics,
@@ -49,7 +52,12 @@ export default function EditItemForm() {
           handleDelete={handleDelete}
           myWidget={myWidget}
         />
-        <StyledSendButton>Item speichern</StyledSendButton>
+        <StyledSendButton>Item aktualisieren</StyledSendButton>
+        <AbortButton
+          style={{ width: '100%' }}
+          onClick={() => history.goBack()}
+          label="Abbrechen"
+        />
       </StyledForm>
     </FormWrapper>
   )
