@@ -80,11 +80,10 @@ const Budget = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-around;
-  border-radius: 15px;
-  border: 1px solid #457b9d;
   padding: 10px;
-  width: 100px;
+  width: 150px;
   color: #457b9d;
   height: 50px;
   font-weight: bold;
+  font-size: 1.3em;
 `
