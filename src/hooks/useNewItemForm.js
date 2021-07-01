@@ -57,24 +57,34 @@ export default function useNewItemForm() {
       })
   }
 
-  function handleDelete(delete_token, index) {
-    const dataString = `token=${delete_token}`
-    fetch(`https://api.cloudinary.com/v1_1/martinpagels-dev/delete_by_token`, {
-      method: 'POST',
-      headers: new Headers({
-        'Content-Type': 'application/x-www-form-urlencoded', // <-- Specifying the Content-Type
-      }),
-      body: dataString,
-    }) // *GET, POST, PUT, DELETE, etc.)
-      .then((res) => res.json())
-      .then((data) => {
-        if (!data.error && data.result === 'ok') {
-          setUploadedPics([
-            ...uploadedPics.slice(0, index),
-            ...uploadedPics.slice(index + 1),
-          ])
+  function handleDelete(image, index) {
+    if (image.delete_token) {
+      const dataString = `token=${image.delete_token}`
+      fetch(
+        `https://api.cloudinary.com/v1_1/martinpagels-dev/delete_by_token`,
+        {
+          method: 'POST',
+          headers: new Headers({
+            'Content-Type': 'application/x-www-form-urlencoded', // <-- Specifying the Content-Type
+          }),
+          body: dataString,
         }
-      })
+      ) // *GET, POST, PUT, DELETE, etc.)
+        .then((res) => res.json())
+        .then((data) => {
+          if (!data.error && data.result === 'ok') {
+            setUploadedPics([
+              ...uploadedPics.slice(0, index),
+              ...uploadedPics.slice(index + 1),
+            ])
+          }
+        })
+    } else {
+      setUploadedPics([
+        ...uploadedPics.slice(0, index),
+        ...uploadedPics.slice(index + 1),
+      ])
+    }
   }
 
   return {

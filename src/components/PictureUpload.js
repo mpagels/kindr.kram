@@ -16,7 +16,7 @@ export default function PictureUpload({
               <DeleteButton
                 type="button"
                 className="Delete_btn"
-                onClick={() => handleDelete(image.delete_token, index)}
+                onClick={() => handleDelete(image, index)}
               >
                 ❌
               </DeleteButton>
