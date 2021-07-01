@@ -12,7 +12,7 @@ export default function PictureUpload({
       <UploadedPictures>
         {uploadedPics.length > 0 &&
           uploadedPics.map((image, index) => (
-            <Wrapper>
+            <Wrapper key={image.public_id}>
               <DeleteButton
                 type="button"
                 className="Delete_btn"
@@ -22,7 +22,7 @@ export default function PictureUpload({
               </DeleteButton>
               <Image
                 cloudName="martinpagels-dev"
-                publicId={image.public_id}
+                publicId={image.public_id || image}
                 width="70"
                 crop="scale"
               />

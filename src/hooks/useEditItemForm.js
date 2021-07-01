@@ -49,20 +49,23 @@ export default function useNewItemForm() {
           price: data.price,
           description: data.description,
         })
+        console.log(data.image_urls)
+        setUploadedPics(data.image_urls)
       })
   }, [])
 
-  function createNewItem(data) {
+  function updateEditedItem(data) {
     const { itemName, price, description } = data
-    const newItem = {
+    const editItem = {
+      id: id,
       name: itemName,
       price,
       description,
       image_urls: uploadedPics.map((image) => image.public_id),
     }
-    fetch('/api/item/create', {
+    fetch('/api/item/edit', {
       method: 'POST',
-      body: JSON.stringify(newItem),
+      body: JSON.stringify(editItem),
       headers: {
         'Content-Type': 'application/json',
         // 'Content-Type': 'application/x-www-form-urlencoded',
@@ -101,7 +104,7 @@ export default function useNewItemForm() {
     uploadedPics,
     register,
     handleSubmit,
-    createNewItem,
+    updateEditedItem,
     handleDelete,
     errors,
   }

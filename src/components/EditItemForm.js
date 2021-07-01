@@ -8,13 +8,13 @@ export default function EditItemForm() {
     uploadedPics,
     register,
     handleSubmit,
-    createNewItem,
+    updateEditedItem,
     handleDelete,
     errors,
   } = useEditItemForm()
   return (
     <FormWrapper>
-      <StyledForm onSubmit={handleSubmit(createNewItem)}>
+      <StyledForm onSubmit={handleSubmit(updateEditedItem)}>
         {/* register your input into the hook by invoking the "register" function */}
         <StyledLabel for="itemName">Itemname:</StyledLabel>
         <StyledInput
