@@ -20,7 +20,11 @@ export default function PrivateRoute({ component: Component, ...rest }) {
     <Route
       {...rest}
       render={(props) =>
-        !(user.message === 'No authentification' || user.user === null) ? (
+        !(
+          user.message === 'No authentification' ||
+          user.user === null ||
+          user === ''
+        ) ? (
           <>
             <Header budget={budget} />
             <Component {...props} user={user} />

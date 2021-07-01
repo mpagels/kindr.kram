@@ -1,9 +1,10 @@
-import { useHistory } from 'react-router-dom'
-import { useState } from 'react'
+import { useHistory, useParams } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 export default function useNewItemForm() {
   let history = useHistory()
+  const { id } = useParams()
   const [uploadedPics, setUploadedPics] = useState([])
   const myWidget = window.cloudinary.createUploadWidget(
     {
@@ -31,19 +32,46 @@ export default function useNewItemForm() {
     handleSubmit,
     /* watch, */
     formState: { errors },
+    reset,
   } = useForm()
 
-  function createNewItem(data) {
+  useEffect(() => {
+    fetch('/api/item/' + id, {
+      headers: {
+        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        reset({
+          itemName: data.name,
+          price: data.price,
+          description: data.description,
+        })
+        console.log(data.image_urls)
+        setUploadedPics(data.image_urls)
+      })
+  }, [id, reset])
+
+  function updateEditedItem(data) {
     const { itemName, price, description } = data
-    const newItem = {
+    const editItem = {
+      id: id,
       name: itemName,
       price,
       description,
-      image_urls: uploadedPics.map((image) => image.public_id),
+      image_urls: uploadedPics.map((image) => {
+        if (image.public_id) {
+          return image.public_id
+        } else {
+          return image
+        }
+      }),
     }
-    fetch('/api/item/create', {
+    fetch('/api/item/edit', {
       method: 'POST',
-      body: JSON.stringify(newItem),
+      body: JSON.stringify(editItem),
       headers: {
         'Content-Type': 'application/json',
         // 'Content-Type': 'application/x-www-form-urlencoded',
@@ -92,7 +120,7 @@ export default function useNewItemForm() {
     uploadedPics,
     register,
     handleSubmit,
-    createNewItem,
+    updateEditedItem,
     handleDelete,
     errors,
   }

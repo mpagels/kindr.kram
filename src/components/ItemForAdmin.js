@@ -2,6 +2,8 @@ import styled from 'styled-components'
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
 import getSumOfDonation from '../utils/getSumOfDonation'
+import editSymbol from '../assets/pngs/edit.png'
+import { Link } from 'react-router-dom'
 
 export default function ItemForAdmin({ data }) {
   const { price, donations, name } = data
@@ -10,7 +12,13 @@ export default function ItemForAdmin({ data }) {
   return (
     <ItemWrapper>
       <ContentWrapper>
-        <h2>{name}</h2>
+        <h2>
+          {name}
+          <Link to={`/edit-item/${data._id}`}>
+            <img src={editSymbol} alt="edit-symbol" />
+          </Link>
+        </h2>
+
         <div>
           <p>Eingestellter Preis: {price}€</p>
           <p>Fehlt noch: {price - sumOfDonation}€</p>

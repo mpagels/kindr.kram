@@ -11,6 +11,7 @@ import CustomRedirect from './components/CostumRedirect'
 import CustomCreateItem from './components/CustomCreateItem'
 import CustomItemRedirect from './components/CustomItemRedirect'
 import CustomItemsForAdmin from './components/CustomItemsForAdmins'
+import CustomEditItem from './components/CustomEditItem'
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           </Route>
           <PrivateRoute path="/profil" component={ProfilePage} />
           <PrivateRoute path="/create-item" component={CustomCreateItem} />
+          <PrivateRoute path="/edit-item/:id" component={CustomEditItem} />
           <PrivateRoute path="/items" component={CustomItemRedirect} />
           <PrivateRoute
             path="/items-for-admin"
