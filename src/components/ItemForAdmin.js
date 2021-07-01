@@ -71,8 +71,3 @@ const CircleWrapper = styled.div`
   align-items: center;
   justify-content: center;
 `
-const EditButton = styled.button`
-  all: unset;
-  cursor: pointer;
-  margin-left: 5px;
-`
