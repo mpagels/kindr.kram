@@ -52,7 +52,7 @@ export default function useNewItemForm() {
         console.log(data.image_urls)
         setUploadedPics(data.image_urls)
       })
-  }, [])
+  }, [id, reset])
 
   function updateEditedItem(data) {
     const { itemName, price, description } = data
