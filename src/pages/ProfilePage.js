@@ -3,6 +3,7 @@ import getCategoryColor from '../utils/getCategoryColor'
 import AbortButton from '../components/AbortButton'
 import convertTime from '../utils/convertTime'
 import useProfilPage from '../hooks/useProfilPage'
+import BankAccount from '../components/BankAccount'
 
 export default function ProfilePage() {
   const {
@@ -42,6 +43,7 @@ export default function ProfilePage() {
             <DepositButton onClick={makeDeposit}>Einzahlen</DepositButton>
             <WithDrawButton onClick={makeWithDraw}>Auszahlen</WithDrawButton>
           </KontoButtonWrapper>
+          <BankAccount />
           <ShowTransactionsButton onClick={() => setIsOpen((prev) => !prev)}>
             {isOpen
               ? 'Schließe Transaktionen'
