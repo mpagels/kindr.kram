@@ -1,7 +1,11 @@
 import styled from 'styled-components/macro'
 
 export default function AbortButton({ onClick, label }) {
-  return <Button onClick={onClick}>{label}</Button>
+  return (
+    <Button type="button" onClick={onClick}>
+      {label}
+    </Button>
+  )
 }
 
 const Button = styled.button`
