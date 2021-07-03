@@ -9,6 +9,8 @@ My wife and I expecting our first child. Since we announced the pregnancy our pa
 I learned a lot at building the app. Authentication took much longer than expected and stills feels a bit hacky implementend ;-)
 I loved discussing with my wife about features and how much she was commited to the project. ❤
 
+This project can easily be converted in some sort of "support" app. Just add a wish or a product and let your friends or family donate to the items. Maybe change the logo at the login page ;-)
+
 ## Build with
 
 - React
