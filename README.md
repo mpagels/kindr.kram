@@ -19,6 +19,7 @@ This project can easily be converted in some sort of "support" app. Just add a w
 - jwt auth
 - styled-components
 - Cloudinary
+- deployed on AWS
 
 # Getting Started
 
