@@ -13,6 +13,18 @@ I loved discussing with my wife about features and how much she was commited to 
 
 This project can easily be converted in some sort of "support" app. Just add a wish or a product and let your friends or family donate to the items. Maybe change the logo at the login page ;-)
 
+## Features
+
+- User/Admin Accounts
+- User profil page with donation tracker
+- Small admin dashboard
+- Admin can create/update items in database through frontend
+- Picture upload to cloudinary
+- sort function before rendering Itemlist:
+  - fully donated items at the end
+  - smalles amount to donate first
+- Donation progress bar
+
 ## Build with
 
 - React
