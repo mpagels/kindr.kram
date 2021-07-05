@@ -28,7 +28,7 @@ export default function Item({ data, isAdmin, user, saveNewItem }) {
       <Carousel showThumbs={false}>
         {image_urls.map((url) => (
           <Image key={url} cloudName="martinpagels-dev" publicId={url}>
-            <Transformation quality="60" fetchFormat="auto" />
+            <Transformation quality="15" fetchFormat="auto" />
           </Image>
         ))}
       </Carousel>
