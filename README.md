@@ -40,6 +40,14 @@ On the way I learned a lot about React `Context` and currently I'm looking into 
 - Cloudinary
 - deployed on AWS
 
+## Status
+
+- The app is currently in use with my family. _Obviously_
+- But I've found some things I need to improve
+  - Typescript - I recently looked into Typescript and feeling that this would be a very good addition to the project. Hence the complexity
+  - Look into unecessary re-renders
+  - Better design :-/
+
 # Getting Started
 
 ## Prerequisites
