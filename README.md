@@ -32,6 +32,7 @@ On the way I learned a lot about React `Context` and currently I'm looking into 
 ## Build with
 
 - React
+- React Router
 - Express.js
 - MongoDB & mongoose
 - jwt auth
