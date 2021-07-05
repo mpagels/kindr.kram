@@ -2,7 +2,7 @@ import ProgressBar from 'react-percent-bar'
 import styled from 'styled-components'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
 import { Carousel } from 'react-responsive-carousel'
-import { Image } from 'cloudinary-react'
+import { Image, Transformation } from 'cloudinary-react'
 import useItem from '../hooks/useItem'
 import SpendArea from './SpendArea'
 import PriceDisplay from './PriceDisplay'
@@ -27,7 +27,9 @@ export default function Item({ data, isAdmin, user, saveNewItem }) {
     <ItemWrapper>
       <Carousel showThumbs={false}>
         {image_urls.map((url) => (
-          <Image key={url} cloudName="martinpagels-dev" publicId={url} />
+          <Image key={url} cloudName="martinpagels-dev" publicId={url}>
+            <Transformation quality="60" fetchFormat="auto" />
+          </Image>
         ))}
       </Carousel>
       <PriceDisplay donationVolumne={donationVolumne} price={price} />
