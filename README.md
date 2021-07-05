@@ -14,6 +14,9 @@ This project can easily be converted in some sort of "support" app. Just add a w
 I learned a lot at building the app. Authentication took much longer than expected and stills feels a bit hacky implementend ;-) I looked into `passport.js` but decided to go with a self implemented jwt approach.
 
 On the way I learned a lot about React `Context` and currently I'm looking into `redux` to get a better feeling, when to use which tool.
+
+## Screenshots
+
 ## Features
 
 - User/Admin Accounts
