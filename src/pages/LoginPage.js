@@ -7,7 +7,7 @@ import useAuth from '../hooks/useAuth'
 import 'react-toastify/dist/ReactToastify.css'
 
 export default function LoginPage() {
-  const { loginUser } = useAuth(notifyWrongLogin)
+  const { handleLogin } = useAuth(notifyWrongLogin)
   return (
     <PageWrapper>
       <Title>kindr.kram</Title>
@@ -26,11 +26,6 @@ export default function LoginPage() {
       </LoginArea>
     </PageWrapper>
   )
-
-  async function handleLogin(event) {
-    event.preventDefault()
-    await loginUser(event.target)
-  }
 }
 
 const PageWrapper = styled.div`
