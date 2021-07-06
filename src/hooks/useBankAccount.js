@@ -1,11 +1,13 @@
 import { useState } from 'react'
 
 export default function useBankAccount() {
-  const ACCOUNT_HOLDER = process.env.REACT_APP_ACCOUNT_HOLDER
-  const BLZ = process.env.REACT_APP_BLZ
-  const BIC = process.env.REACT_APP_BIC
-  const IBAN = process.env.REACT_APP_IBAN
-  const BANK = process.env.REACT_APP_BANK
+  const {
+    REACT_APP_ACCOUNT_HOLDER: ACCOUNT_HOLDER,
+    REACT_APP_BLZ: BLZ,
+    REACT_APP_BIC: BIC,
+    REACT_APP_IBAN: IBAN,
+    REACT_APP_BANK: BANK,
+  } = process.env
 
   const [isOpen, setIsOpen] = useState(false)
 
