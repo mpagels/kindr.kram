@@ -85,7 +85,13 @@ export default function useAuth(notify) {
       })
   }
 
+  async function handleLogin(event) {
+    event.preventDefault()
+    await loginUser(event.target)
+  }
+
   return {
+    handleLogin,
     loginUser,
     logoutUser,
     checkAuth,
