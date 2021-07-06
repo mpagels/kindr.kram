@@ -1,22 +1,13 @@
 import { ReactComponent as LoginLogo } from '../assets/svg/Login_logo.svg'
 import styled from 'styled-components/macro'
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-
+import { ToastContainer } from 'react-toastify'
+import { notifyWrongLogin } from '../utils/toastsNotifications'
 import useAuth from '../hooks/useAuth'
 
+import 'react-toastify/dist/ReactToastify.css'
+
 export default function LoginPage() {
-  const notify = () =>
-    toast.error('Username oder Passwort falsch.', {
-      position: 'top-center',
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    })
-  const { loginUser } = useAuth(notify)
+  const { loginUser } = useAuth(notifyWrongLogin)
   return (
     <PageWrapper>
       <Title>kindr.kram</Title>
