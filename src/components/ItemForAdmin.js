@@ -8,7 +8,8 @@ import { Link } from 'react-router-dom'
 export default function ItemForAdmin({ data }) {
   const { price, donations, name } = data
   const [sumOfDonation, donationCount] = getSumOfDonation(donations)
-  const percentage = Math.round((100 / price) * sumOfDonation)
+  const percentage =
+    price !== 0 ? Math.round((100 / price) * sumOfDonation) : 100
   return (
     <ItemWrapper>
       <ContentWrapper>
