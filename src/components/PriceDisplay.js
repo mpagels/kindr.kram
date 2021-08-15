@@ -6,7 +6,7 @@ export default function PriceDisplay({ donationVolumne, price }) {
     <PriceWrapper>
       {!isPriceFull && <PriceTag>{`Preis: ${price}€`}</PriceTag>}
       <InfoOnDonation>
-        <span>bereits gespendet:</span>
+        <span>{price !== 0 ? 'Bereits gespendet:' : 'Umsonst'}</span>
         <CurrentDonation isFull={isPriceFull}>
           {isPriceFull ? `${donationVolumne}€ ✔` : `${donationVolumne}€`}
         </CurrentDonation>
