@@ -4,7 +4,7 @@ import styled from 'styled-components'
 export default function DonationBubble({ locationData }) {
   const { location, donated } = locationData
   return (
-    <BubbleWrapper hasDonated={donated}>
+    <BubbleWrapper hasDonated={donated > 0}>
       <LocationTitle>{location}</LocationTitle>
       <Money>{donated}€</Money>
     </BubbleWrapper>
